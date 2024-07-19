@@ -23,7 +23,6 @@ void LogMessage(const std::string& message) {
     fflush(stdout);
 }
 
-// Add this helper function to your code
 inline std::string to_string(const wchar_t* wstr) {
     if (!wstr) return "";
     std::string str;
@@ -38,16 +37,6 @@ hostfxr_close_fn close_fptr;
 
 bool load_hostfxr()
 {
-    // // Get the path to hostfxr.dll
-    // char_t buffer[MAX_PATH];
-    // size_t buffer_size = sizeof(buffer) / sizeof(char_t);
-    // int rc = get_hostfxr_path(buffer, &buffer_size, nullptr);
-    // if (rc != 0)
-    // {
-    //     LogMessage("Failed to get hostfxr path. Error code: " + std::to_string(rc));
-    //     return false;
-    // }
-
     // Load hostfxr and get desired exports
     HMODULE lib = LoadLibraryW(SOLUTION_DIR L"output\\hostfxr.dll");
     if (lib == NULL)
@@ -120,7 +109,6 @@ bool load_and_run()
     LogMessage("Type name: " + to_string(type_name));
     LogMessage("Method name: " + to_string(method_name));
 
-    // Use UNMANAGEDCALLERSONLY_METHOD for .NET 5+ if the method has the UnmanagedCallersOnly attribute
     rc = ((load_assembly_and_get_function_pointer_fn)load_assembly_and_get_function_pointer)(
         dotnetlib_path,
         type_name,
@@ -132,7 +120,7 @@ bool load_and_run()
     if (rc != 0 || delegate == nullptr)
     {
         LogMessage("Failed to load assembly and get function pointer. Error code: " + std::to_string(rc));
-        // Add more detailed error reporting here if possible
+        // TODO: Add more detailed error reporting here if possible
         close_fptr(cxt);
         return false;
     }
