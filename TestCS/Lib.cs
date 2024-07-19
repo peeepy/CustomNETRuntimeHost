@@ -16,15 +16,16 @@ namespace TestCS
             Init("TestCS", "D:\\CODING\\csharp\\CustomNETRuntimeHost\\output\\init.log");
             LOG.INFO("Hello from C#! This console was created by the injected DLL.");
             LOG.INFO($"Current time is: {DateTime.Now}");
-            try
-            {
-                LOG.INFO($"The square root of 843 is: {BUILTIN.SQRT(80.0f)}");
+            // this doesn't work
+            //try
+            //{
+                //LOG.INFO($"The square root of 843 is: {BUILTIN.SQRT(80.0f)}");
 
-            }
-            catch (Exception ex)
-            {
-                LOG.WARNING($"SQRT() could not be called: {ex}");
-            }
+            //}
+            //catch (Exception ex)
+            //{
+                //LOG.WARNING($"SQRT() could not be called: {ex}");
+           //}
         }
     }
 }

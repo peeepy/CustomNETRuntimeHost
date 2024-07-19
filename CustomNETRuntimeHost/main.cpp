@@ -49,7 +49,7 @@ bool load_hostfxr()
     // }
 
     // Load hostfxr and get desired exports
-    HMODULE lib = LoadLibraryW(L"D:\\CODING\\csharp\\CustomNETRuntimeHost\\output\\hostfxr.dll");
+    HMODULE lib = LoadLibraryW(SOLUTION_DIR L"output\\hostfxr.dll");
     if (lib == NULL)
     {
         LogMessage("Failed to load hostfxr.dll. Error code: " + std::to_string(GetLastError()));
@@ -83,7 +83,7 @@ bool load_and_run()
     LogMessage("hostfxr loaded successfully");
 
     // Get the path to the .NET Core runtime configuration file
-    const wchar_t* config_path = L"D:\\CODING\\csharp\\CustomNETRuntimeHost\\output\\TestCS.runtimeconfig.json";
+    const wchar_t* config_path = SOLUTION_DIR L"output\\TestCS.runtimeconfig.json";
 
     // Load and initialize .NET Core
     void* load_assembly_and_get_function_pointer = nullptr;
@@ -111,7 +111,7 @@ bool load_and_run()
     LogMessage(".NET Core runtime initialized successfully");
 
     // Load managed assembly and get function pointer to a managed method
-    const char_t* dotnetlib_path = STR("D:\\CODING\\csharp\\CustomNETRuntimeHost\\output\\TestCS.dll");
+    const char_t* dotnetlib_path = SOLUTION_DIR STR("output\\TestCS.dll");
     const char_t* type_name = STR("TestCS.Program, TestCS");
     const char_t* method_name = STR("Main");
     void* delegate = nullptr;
