@@ -1,0 +1,36 @@
+﻿global using Vector3 = TestCS.Rage.scrVector;
+global using Void = System.Int32;
+global using Any = System.Int32;
+global using Hash = System.Int32;
+global using Entity = System.Int32;
+global using Player = System.Int32;
+global using FireId = System.Int32;
+global using Ped = System.Int32;
+global using Vehicle = System.Int32;
+global using Cam = System.Int32;
+global using CarGenerator = System.Int32;
+global using Group = System.Int32;
+global using Train = System.Int32;
+global using Pickup = System.Int32;
+global using Object = System.Int32;
+global using Weapon = System.Int32;
+global using Interior = System.Int32;
+global using Blip = System.Int32;
+global using Texture = System.Int32;
+global using TextureDict = System.Int32;
+global using CoverPoint = System.Int32;
+global using Camera = System.Int32;
+global using TaskSequence = System.Int32;
+global using ColourIndex = System.Int32;
+global using Sphere = System.Int32;
+global using ScrHandle = System.Int32;
+global using AnimScene = System.Int32;
+global using Volume = System.Int32;
+global using ItemSet = System.Int32;
+global using PropSet = System.Int32;
+global using PopZone = System.Int32;
+global using PersChar = System.Int32;
+global using Prompt = System.Int32;
+global using BOOL = System.Int32;  // Alias BOOL to int for P/Invoke
+
+global using static TestCS.Logger;
