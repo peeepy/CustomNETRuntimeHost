@@ -13,19 +13,19 @@ namespace TestCS
         [UnmanagedCallersOnly]
         public static void Main()
         {
-            Init("TestCS", "D:\\CODING\\csharp\\CustomNETRuntimeHost\\output\\init.log");
+            Init("TestCS", "D:\\Coding\\csharp\\CustomNETRuntimeHost\\output\\init.log");
             LOG.INFO("Hello from C#! This console was created by the injected DLL.");
             LOG.INFO($"Current time is: {DateTime.Now}");
             // this doesn't work
-            //try
-            //{
-                //LOG.INFO($"The square root of 843 is: {BUILTIN.SQRT(80.0f)}");
+            try
+            {
+                LOG.INFO($"The nearest rounded number to 74.5 is: {BUILTIN.ROUND(74.5f)}");
 
-            //}
-            //catch (Exception ex)
-            //{
-                //LOG.WARNING($"SQRT() could not be called: {ex}");
-           //}
+            }
+            catch (Exception ex)
+            {
+                LOG.WARNING($"ROUND() could not be called: {ex}");
+            }
         }
     }
 }
