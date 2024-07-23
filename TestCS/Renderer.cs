@@ -9,7 +9,6 @@ using Vortice.Direct3D12;
 using Vortice.DXCore;
 using System.Collections;
 using Silk.NET.Core.Native;
-using Vortice.Vulkan;
 using Win32;
 using System.Reflection;
 
@@ -30,14 +29,14 @@ namespace TestCS
         // DX12
         private SwapChainDescription _SwapChainDesc;
         private IDXGISwapChain1 _GameSwapChain;
-        private IDXGISwapChain3? _SwapChain;
-        private ID3D12Device? _Device;
-        private ID3D12CommandQueue? _CommandQueue;
-        private ID3D12CommandAllocator? _CommandAllocator;
-        private ID3D12GraphicsCommandList? _CommandList;
-        private ID3D12DescriptorHeap? _BackbufferDescriptorHeap;
-        private ID3D12DescriptorHeap? _DescriptorHeap;
-        private ID3D12Fence? _Fence;
+        private IDXGISwapChain3 _SwapChain;
+        private ID3D12Device _Device;
+        private ID3D12CommandQueue _CommandQueue;
+        private ID3D12CommandAllocator _CommandAllocator;
+        private ID3D12GraphicsCommandList _CommandList;
+        private ID3D12DescriptorHeap _BackbufferDescriptorHeap;
+        private ID3D12DescriptorHeap _DescriptorHeap;
+        private ID3D12Fence _Fence;
 
 
         // Vulkan
@@ -77,6 +76,72 @@ namespace TestCS
         private ImGui_ImplVulkanH_Frame[] _VkFrames = new ImGui_ImplVulkanH_Frame[8];
         private ImGui_ImplVulkanH_FrameSemaphores[] m_VkFrameSemaphores = new ImGui_ImplVulkanH_FrameSemaphores[8];
 
+        private unsafe bool InitDX12()
+        {
+            if (!Pointers.SwapChain)
+            {
+                LOG.WARNING("SwapChain pointer is invalid!");
+
+                return false;
+            }
+
+            if (!Pointers.CommandQueue)
+            {
+                LOG.WARNING("CommandQueue pointer is invalid!");
+
+                return false;
+            }
+
+            _GameSwapChain = new IDXGISwapChain1(Pointers.SwapChain);
+            if (_GameSwapChain == null)
+            {
+                LOG.WARNING("WARNING: Dereferenced SwapChain pointer is invalid!");
+                return false;
+            }
+
+            // CommandQueue
+            _CommandQueue = new ID3D12CommandQueue(Pointers.CommandQueue);
+            if (_CommandQueue == null)
+            {
+                LOG.WARNING("WARNING: Dereferenced CommandQueue pointer is invalid!");
+                return false;
+            }
+
+            // Query for IDXGISwapChain3 interface
+            _SwapChain = _GameSwapChain.QueryInterface<IDXGISwapChain3>();
+            if (_SwapChain == null)
+            {
+                Console.WriteLine("Failed to query IDXGISwapChain3 interface");
+                return false;
+            }
+
+            Win32.HResult result = _SwapChain.GetDevice(typeof(ID3D12Device).GUID, out IntPtr devicePtr);
+            if (result.Failure)
+            {
+                Console.WriteLine($"Failed to get D3D12 Device with result: [{result}]");
+                return false;
+            }
+
+            _Device = new ID3D12Device(devicePtr);
+        
+
+        // Get the swap chain description
+        _SwapChainDesc = _SwapChain.Description;
+
+            if (_Device->CreateFence(0, FenceFlags.None, __uuidof(ID3D12Fence), (void**)_Fence.GetAddressOf()); result < 0)
+		{
+                LOG(WARNING) << "Failed to create Fence with result: [" << result << "]";
+
+                return false;
+            }
+
+            if (const auto result = m_FenceEvent = CreateEventA(nullptr, FALSE, FALSE, nullptr); !result)
+		{
+                LOG(WARNING) << "Failed to create Fence Event!";
+
+                return false;
+            }
+        }
         private unsafe bool InitVulkan()
         {
             InstanceCreateInfo instanceInfo = new InstanceCreateInfo
