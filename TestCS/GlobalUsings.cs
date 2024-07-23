@@ -34,3 +34,6 @@ global using Prompt = System.Int32;
 global using BOOL = System.Int32;  // Alias BOOL to int for P/Invoke
 
 global using static TestCS.Logger;
+global using System;
+global using System.Runtime.InteropServices;
+global using ImGuiNET;

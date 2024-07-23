@@ -3786,19 +3786,23 @@ namespace Natives
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-        private static partial Vector3 GET_CAM_COORD_Export(Cam CameraIndex);
+        private static partial void GET_CAM_COORD_Export(Cam CameraIndex, out Vector3 result);
 
         public static Vector3 GET_CAM_COORD(Cam CameraIndex)
         {
-            return GET_CAM_COORD_Export(CameraIndex);
+            Vector3 result;
+            GET_CAM_COORD_Export(CameraIndex, out result);
+            return result;
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-        private static partial Vector3 GET_CAM_ROT_Export(Cam CameraIndex, int RotOrder);
+        private static partial void GET_CAM_ROT_Export(Cam CameraIndex, int RotOrder, out Vector3 result);
 
         public static Vector3 GET_CAM_ROT(Cam CameraIndex, int RotOrder)
         {
-            return GET_CAM_ROT_Export(CameraIndex, RotOrder);
+            Vector3 result;
+            GET_CAM_ROT_Export(CameraIndex, RotOrder, out result);
+            return result;
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
@@ -4194,19 +4198,23 @@ namespace Natives
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-        private static partial Vector3 GET_GAMEPLAY_CAM_COORD_Export();
+        private static partial void GET_GAMEPLAY_CAM_COORD_Export(out Vector3 result);
 
         public static Vector3 GET_GAMEPLAY_CAM_COORD()
         {
-            return GET_GAMEPLAY_CAM_COORD_Export();
+            Vector3 result;
+            GET_GAMEPLAY_CAM_COORD_Export(out result);
+            return result;
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-        private static partial Vector3 GET_GAMEPLAY_CAM_ROT_Export(int RotOrder);
+        private static partial void GET_GAMEPLAY_CAM_ROT_Export(int RotOrder, out Vector3 result);
 
         public static Vector3 GET_GAMEPLAY_CAM_ROT(int RotOrder)
         {
-            return GET_GAMEPLAY_CAM_ROT_Export(RotOrder);
+            Vector3 result;
+            GET_GAMEPLAY_CAM_ROT_Export(RotOrder, out result);
+            return result;
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
@@ -4738,19 +4746,23 @@ namespace Natives
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-        private static partial Vector3 GET_FINAL_RENDERED_CAM_COORD_Export();
+        private static partial void GET_FINAL_RENDERED_CAM_COORD_Export(out Vector3 result);
 
         public static Vector3 GET_FINAL_RENDERED_CAM_COORD()
         {
-            return GET_FINAL_RENDERED_CAM_COORD_Export();
+            Vector3 result;
+            GET_FINAL_RENDERED_CAM_COORD_Export(out result);
+            return result;
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-        private static partial Vector3 GET_FINAL_RENDERED_CAM_ROT_Export(int RotOrder);
+        private static partial void GET_FINAL_RENDERED_CAM_ROT_Export(int RotOrder, out Vector3 result);
 
         public static Vector3 GET_FINAL_RENDERED_CAM_ROT(int RotOrder)
         {
-            return GET_FINAL_RENDERED_CAM_ROT_Export(RotOrder);
+            Vector3 result;
+            GET_FINAL_RENDERED_CAM_ROT_Export(RotOrder, out result);
+            return result;
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
@@ -5730,11 +5742,13 @@ namespace Natives
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-        private static partial Vector3 _COLLECTABLE_GET_PLACEMENT_LOCATION_Export(uint collectableItem);
+        private static partial void _COLLECTABLE_GET_PLACEMENT_LOCATION_Export(uint collectableItem, out Vector3 result);
 
         public static Vector3 _COLLECTABLE_GET_PLACEMENT_LOCATION(uint collectableItem)
         {
-            return _COLLECTABLE_GET_PLACEMENT_LOCATION_Export(collectableItem);
+            Vector3 result;
+            _COLLECTABLE_GET_PLACEMENT_LOCATION_Export(collectableItem, out result);
+            return result;
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
@@ -7499,11 +7513,13 @@ namespace Natives
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-        private static partial Vector3 DATADICT_GET_VECTOR_Export(IntPtr dict, [MarshalAs(UnmanagedType.LPStr)] string name);
+        private static partial void DATADICT_GET_VECTOR_Export(IntPtr dict, [MarshalAs(UnmanagedType.LPStr)] string name, out Vector3 result);
 
         public static Vector3 DATADICT_GET_VECTOR(IntPtr dict, string name)
         {
-            return DATADICT_GET_VECTOR_Export(dict, name);
+            Vector3 result;
+            DATADICT_GET_VECTOR_Export(dict, name, out result);
+            return result;
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
@@ -7605,11 +7621,13 @@ namespace Natives
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-        private static partial Vector3 DATAARRAY_GET_VECTOR_Export(IntPtr arr, int index);
+        private static partial void DATAARRAY_GET_VECTOR_Export(IntPtr arr, int index, out Vector3 result);
 
         public static Vector3 DATAARRAY_GET_VECTOR(IntPtr arr, int index)
         {
-            return DATAARRAY_GET_VECTOR_Export(arr, index);
+            Vector3 result;
+            DATAARRAY_GET_VECTOR_Export(arr, index, out result);
+            return result;
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
@@ -8175,19 +8193,23 @@ namespace Natives
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-        private static partial Vector3 GET_ENTITY_COORDS_Export(Entity EntityIndex, BOOL DoDeadCheck, BOOL realCoords);
+        private static partial void GET_ENTITY_COORDS_Export(Entity EntityIndex, BOOL DoDeadCheck, BOOL realCoords, out Vector3 result);
 
         public static Vector3 GET_ENTITY_COORDS(Entity EntityIndex, bool DoDeadCheck, bool realCoords)
         {
-            return GET_ENTITY_COORDS_Export(EntityIndex, DoDeadCheck ? 1 : 0, realCoords ? 1 : 0);
+            Vector3 result;
+            GET_ENTITY_COORDS_Export(EntityIndex, DoDeadCheck ? 1 : 0, realCoords ? 1 : 0, out result);
+            return result;
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-        private static partial Vector3 GET_ENTITY_FORWARD_VECTOR_Export(Entity EntityIndex);
+        private static partial void GET_ENTITY_FORWARD_VECTOR_Export(Entity EntityIndex, out Vector3 result);
 
         public static Vector3 GET_ENTITY_FORWARD_VECTOR(Entity EntityIndex)
         {
-            return GET_ENTITY_FORWARD_VECTOR_Export(EntityIndex);
+            Vector3 result;
+            GET_ENTITY_FORWARD_VECTOR_Export(EntityIndex, out result);
+            return result;
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
@@ -8207,11 +8229,13 @@ namespace Natives
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-        private static partial Vector3 _GET_ENTITY_FORWARD_VECTOR_YX_Export(Entity entity);
+        private static partial void _GET_ENTITY_FORWARD_VECTOR_YX_Export(Entity entity, out Vector3 result);
 
         public static Vector3 _GET_ENTITY_FORWARD_VECTOR_YX(Entity entity)
         {
-            return _GET_ENTITY_FORWARD_VECTOR_YX_Export(entity);
+            Vector3 result;
+            _GET_ENTITY_FORWARD_VECTOR_YX_Export(entity, out result);
+            return result;
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
@@ -8335,19 +8359,23 @@ namespace Natives
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-        private static partial Vector3 GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS_Export(Entity EntityIndex, float VecWorldCoorsX, float VecWorldCoorsY, float VecWorldCoorsZ);
+        private static partial void GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS_Export(Entity EntityIndex, float VecWorldCoorsX, float VecWorldCoorsY, float VecWorldCoorsZ, out Vector3 result);
 
         public static Vector3 GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS(Entity EntityIndex, float VecWorldCoorsX, float VecWorldCoorsY, float VecWorldCoorsZ)
         {
-            return GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS_Export(EntityIndex, VecWorldCoorsX, VecWorldCoorsY, VecWorldCoorsZ);
+            Vector3 result;
+            GET_OFFSET_FROM_ENTITY_GIVEN_WORLD_COORDS_Export(EntityIndex, VecWorldCoorsX, VecWorldCoorsY, VecWorldCoorsZ, out result);
+            return result;
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-        private static partial Vector3 GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS_Export(Entity EntityIndex, float VecNewCoorsX, float VecNewCoorsY, float VecNewCoorsZ);
+        private static partial void GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS_Export(Entity EntityIndex, float VecNewCoorsX, float VecNewCoorsY, float VecNewCoorsZ, out Vector3 result);
 
         public static Vector3 GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS(Entity EntityIndex, float VecNewCoorsX, float VecNewCoorsY, float VecNewCoorsZ)
         {
-            return GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS_Export(EntityIndex, VecNewCoorsX, VecNewCoorsY, VecNewCoorsZ);
+            Vector3 result;
+            GET_OFFSET_FROM_ENTITY_IN_WORLD_COORDS_Export(EntityIndex, VecNewCoorsX, VecNewCoorsY, VecNewCoorsZ, out result);
+            return result;
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
@@ -8367,11 +8395,13 @@ namespace Natives
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-        private static partial Vector3 GET_ENTITY_ROTATION_Export(Entity EntityIndex, int RotOrder);
+        private static partial void GET_ENTITY_ROTATION_Export(Entity EntityIndex, int RotOrder, out Vector3 result);
 
         public static Vector3 GET_ENTITY_ROTATION(Entity EntityIndex, int RotOrder)
         {
-            return GET_ENTITY_ROTATION_Export(EntityIndex, RotOrder);
+            Vector3 result;
+            GET_ENTITY_ROTATION_Export(EntityIndex, RotOrder, out result);
+            return result;
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
@@ -8391,11 +8421,13 @@ namespace Natives
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-        private static partial Vector3 GET_ENTITY_SPEED_VECTOR_Export(Entity EntityIndex, BOOL bLocalResult);
+        private static partial void GET_ENTITY_SPEED_VECTOR_Export(Entity EntityIndex, BOOL bLocalResult, out Vector3 result);
 
         public static Vector3 GET_ENTITY_SPEED_VECTOR(Entity EntityIndex, bool bLocalResult)
         {
-            return GET_ENTITY_SPEED_VECTOR_Export(EntityIndex, bLocalResult ? 1 : 0);
+            Vector3 result;
+            GET_ENTITY_SPEED_VECTOR_Export(EntityIndex, bLocalResult ? 1 : 0, out result);
+            return result;
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
@@ -8407,11 +8439,13 @@ namespace Natives
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-        private static partial Vector3 GET_ENTITY_VELOCITY_Export(Entity EntityIndex, int p1);
+        private static partial void GET_ENTITY_VELOCITY_Export(Entity EntityIndex, int p1, out Vector3 result);
 
         public static Vector3 GET_ENTITY_VELOCITY(Entity EntityIndex, int p1)
         {
-            return GET_ENTITY_VELOCITY_Export(EntityIndex, p1);
+            Vector3 result;
+            GET_ENTITY_VELOCITY_Export(EntityIndex, p1, out result);
+            return result;
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
@@ -8439,27 +8473,33 @@ namespace Natives
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-        private static partial Vector3 GET_WORLD_POSITION_OF_ENTITY_BONE_Export(Entity EntityIndex, int iBoneIdx);
+        private static partial void GET_WORLD_POSITION_OF_ENTITY_BONE_Export(Entity EntityIndex, int iBoneIdx, out Vector3 result);
 
         public static Vector3 GET_WORLD_POSITION_OF_ENTITY_BONE(Entity EntityIndex, int iBoneIdx)
         {
-            return GET_WORLD_POSITION_OF_ENTITY_BONE_Export(EntityIndex, iBoneIdx);
+            Vector3 result;
+            GET_WORLD_POSITION_OF_ENTITY_BONE_Export(EntityIndex, iBoneIdx, out result);
+            return result;
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-        private static partial Vector3 _0x5E214112806591EA_Export(Entity entity, int boneIndex);
+        private static partial void _0x5E214112806591EA_Export(Entity entity, int boneIndex, out Vector3 result);
 
         public static Vector3 _0x5E214112806591EA(Entity entity, int boneIndex)
         {
-            return _0x5E214112806591EA_Export(entity, boneIndex);
+            Vector3 result;
+            _0x5E214112806591EA_Export(entity, boneIndex, out result);
+            return result;
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-        private static partial Vector3 _0x3AB3A77672F6473F_Export(Any p0, Any p1, Any p2, Any p3);
+        private static partial void _0x3AB3A77672F6473F_Export(Any p0, Any p1, Any p2, Any p3, out Vector3 result);
 
         public static Vector3 _0x3AB3A77672F6473F(Any p0, Any p1, Any p2, Any p3)
         {
-            return _0x3AB3A77672F6473F_Export(p0, p1, p2, p3);
+            Vector3 result;
+            _0x3AB3A77672F6473F_Export(p0, p1, p2, p3, out result);
+            return result;
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
@@ -10939,11 +10979,13 @@ namespace Natives
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-        private static partial Vector3 _0x1DA6CB02071055D5_Export(Any p0);
+        private static partial void _0x1DA6CB02071055D5_Export(Any p0, out Vector3 result);
 
         public static Vector3 _0x1DA6CB02071055D5(Any p0)
         {
-            return _0x1DA6CB02071055D5_Export(p0);
+            Vector3 result;
+            _0x1DA6CB02071055D5_Export(p0, out result);
+            return result;
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
@@ -15241,11 +15283,13 @@ namespace Natives
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-        private static partial Vector3 _GET_INTERIOR_POSITION_Export(Interior interior);
+        private static partial void _GET_INTERIOR_POSITION_Export(Interior interior, out Vector3 result);
 
         public static Vector3 _GET_INTERIOR_POSITION(Interior interior)
         {
-            return _GET_INTERIOR_POSITION_Export(interior);
+            Vector3 result;
+            _GET_INTERIOR_POSITION_Export(interior, out result);
+            return result;
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
@@ -18089,11 +18133,13 @@ namespace Natives
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-        private static partial Vector3 GET_BLIP_COORDS_Export(Blip BlipIndex);
+        private static partial void GET_BLIP_COORDS_Export(Blip BlipIndex, out Vector3 result);
 
         public static Vector3 GET_BLIP_COORDS(Blip BlipIndex)
         {
-            return GET_BLIP_COORDS_Export(BlipIndex);
+            Vector3 result;
+            GET_BLIP_COORDS_Export(BlipIndex, out result);
+            return result;
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
@@ -18321,11 +18367,13 @@ namespace Natives
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-        private static partial Vector3 _GET_WAYPOINT_COORDS_Export();
+        private static partial void _GET_WAYPOINT_COORDS_Export(out Vector3 result);
 
         public static Vector3 _GET_WAYPOINT_COORDS()
         {
-            return _GET_WAYPOINT_COORDS_Export();
+            Vector3 result;
+            _GET_WAYPOINT_COORDS_Export(out result);
+            return result;
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
@@ -19419,11 +19467,13 @@ namespace Natives
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-        private static partial Vector3 GET_WIND_DIRECTION_Export();
+        private static partial void GET_WIND_DIRECTION_Export(out Vector3 result);
 
         public static Vector3 GET_WIND_DIRECTION()
         {
-            return GET_WIND_DIRECTION_Export();
+            Vector3 result;
+            GET_WIND_DIRECTION_Export(out result);
+            return result;
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
@@ -19683,11 +19733,13 @@ namespace Natives
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-        private static partial Vector3 GET_CLOSEST_POINT_ON_LINE_Export(float rPointToTestX, float rPointToTestY, float rPointToTestZ, float vStartX, float vStartY, float vStartZ, float vEndX, float vEndY, float vEndZ, BOOL bClampToLine);
+        private static partial void GET_CLOSEST_POINT_ON_LINE_Export(float rPointToTestX, float rPointToTestY, float rPointToTestZ, float vStartX, float vStartY, float vStartZ, float vEndX, float vEndY, float vEndZ, BOOL bClampToLine, out Vector3 result);
 
         public static Vector3 GET_CLOSEST_POINT_ON_LINE(float rPointToTestX, float rPointToTestY, float rPointToTestZ, float vStartX, float vStartY, float vStartZ, float vEndX, float vEndY, float vEndZ, bool bClampToLine)
         {
-            return GET_CLOSEST_POINT_ON_LINE_Export(rPointToTestX, rPointToTestY, rPointToTestZ, vStartX, vStartY, vStartZ, vEndX, vEndY, vEndZ, bClampToLine ? 1 : 0);
+            Vector3 result;
+            GET_CLOSEST_POINT_ON_LINE_Export(rPointToTestX, rPointToTestY, rPointToTestZ, vStartX, vStartY, vStartZ, vEndX, vEndY, vEndZ, bClampToLine ? 1 : 0, out result);
+            return result;
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
@@ -26409,11 +26461,13 @@ namespace Natives
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-        private static partial Vector3 GET_OFFSET_FROM_COORD_AND_HEADING_IN_WORLD_COORDS_Export(float vPosX, float vPosY, float vPosZ, float fHeading, float vOffsetX, float vOffsetY, float vOffsetZ);
+        private static partial void GET_OFFSET_FROM_COORD_AND_HEADING_IN_WORLD_COORDS_Export(float vPosX, float vPosY, float vPosZ, float fHeading, float vOffsetX, float vOffsetY, float vOffsetZ, out Vector3 result);
 
         public static Vector3 GET_OFFSET_FROM_COORD_AND_HEADING_IN_WORLD_COORDS(float vPosX, float vPosY, float vPosZ, float fHeading, float vOffsetX, float vOffsetY, float vOffsetZ)
         {
-            return GET_OFFSET_FROM_COORD_AND_HEADING_IN_WORLD_COORDS_Export(vPosX, vPosY, vPosZ, fHeading, vOffsetX, vOffsetY, vOffsetZ);
+            Vector3 result;
+            GET_OFFSET_FROM_COORD_AND_HEADING_IN_WORLD_COORDS_Export(vPosX, vPosY, vPosZ, fHeading, vOffsetX, vOffsetY, vOffsetZ, out result);
+            return result;
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
@@ -27025,19 +27079,23 @@ namespace Natives
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-        private static partial Vector3 GET_SAFE_PICKUP_COORDS_Export(float VecInCoorsX, float VecInCoorsY, float VecInCoorsZ, float minDist, float maxDist, Any p5);
+        private static partial void GET_SAFE_PICKUP_COORDS_Export(float VecInCoorsX, float VecInCoorsY, float VecInCoorsZ, float minDist, float maxDist, Any p5, out Vector3 result);
 
         public static Vector3 GET_SAFE_PICKUP_COORDS(float VecInCoorsX, float VecInCoorsY, float VecInCoorsZ, float minDist, float maxDist, Any p5)
         {
-            return GET_SAFE_PICKUP_COORDS_Export(VecInCoorsX, VecInCoorsY, VecInCoorsZ, minDist, maxDist, p5);
+            Vector3 result;
+            GET_SAFE_PICKUP_COORDS_Export(VecInCoorsX, VecInCoorsY, VecInCoorsZ, minDist, maxDist, p5, out result);
+            return result;
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-        private static partial Vector3 GET_PICKUP_COORDS_Export(Pickup PickupID);
+        private static partial void GET_PICKUP_COORDS_Export(Pickup PickupID, out Vector3 result);
 
         public static Vector3 GET_PICKUP_COORDS(Pickup PickupID)
         {
-            return GET_PICKUP_COORDS_Export(PickupID);
+            Vector3 result;
+            GET_PICKUP_COORDS_Export(PickupID, out result);
+            return result;
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
@@ -28297,11 +28355,13 @@ namespace Natives
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-        private static partial Vector3 _NAVMESH_REQUESTED_PATH_WAYPOINT_BY_INDEX_Export(int path, int waypointIndex);
+        private static partial void _NAVMESH_REQUESTED_PATH_WAYPOINT_BY_INDEX_Export(int path, int waypointIndex, out Vector3 result);
 
         public static Vector3 _NAVMESH_REQUESTED_PATH_WAYPOINT_BY_INDEX(int path, int waypointIndex)
         {
-            return _NAVMESH_REQUESTED_PATH_WAYPOINT_BY_INDEX_Export(path, waypointIndex);
+            Vector3 result;
+            _NAVMESH_REQUESTED_PATH_WAYPOINT_BY_INDEX_Export(path, waypointIndex, out result);
+            return result;
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
@@ -29365,11 +29425,13 @@ namespace Natives
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-        private static partial Vector3 GET_DEAD_PED_PICKUP_COORDS_Export(Ped PedIndex, float minDist, float maxDist);
+        private static partial void GET_DEAD_PED_PICKUP_COORDS_Export(Ped PedIndex, float minDist, float maxDist, out Vector3 result);
 
         public static Vector3 GET_DEAD_PED_PICKUP_COORDS(Ped PedIndex, float minDist, float maxDist)
         {
-            return GET_DEAD_PED_PICKUP_COORDS_Export(PedIndex, minDist, maxDist);
+            Vector3 result;
+            GET_DEAD_PED_PICKUP_COORDS_Export(PedIndex, minDist, maxDist, out result);
+            return result;
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
@@ -31621,19 +31683,23 @@ namespace Natives
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-        private static partial Vector3 GET_ANIM_INITIAL_OFFSET_POSITION_Export([MarshalAs(UnmanagedType.LPStr)] string pAnimDictName, [MarshalAs(UnmanagedType.LPStr)] string pAnimName, float scenePositionX, float scenePositionY, float scenePositionZ, float sceneOrientationX, float sceneOrientationY, float sceneOrientationZ, float phase, int RotOrder);
+        private static partial void GET_ANIM_INITIAL_OFFSET_POSITION_Export([MarshalAs(UnmanagedType.LPStr)] string pAnimDictName, [MarshalAs(UnmanagedType.LPStr)] string pAnimName, float scenePositionX, float scenePositionY, float scenePositionZ, float sceneOrientationX, float sceneOrientationY, float sceneOrientationZ, float phase, int RotOrder, out Vector3 result);
 
         public static Vector3 GET_ANIM_INITIAL_OFFSET_POSITION(string pAnimDictName, string pAnimName, float scenePositionX, float scenePositionY, float scenePositionZ, float sceneOrientationX, float sceneOrientationY, float sceneOrientationZ, float phase, int RotOrder)
         {
-            return GET_ANIM_INITIAL_OFFSET_POSITION_Export(pAnimDictName, pAnimName, scenePositionX, scenePositionY, scenePositionZ, sceneOrientationX, sceneOrientationY, sceneOrientationZ, phase, RotOrder);
+            Vector3 result;
+            GET_ANIM_INITIAL_OFFSET_POSITION_Export(pAnimDictName, pAnimName, scenePositionX, scenePositionY, scenePositionZ, sceneOrientationX, sceneOrientationY, sceneOrientationZ, phase, RotOrder, out result);
+            return result;
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-        private static partial Vector3 GET_ANIM_INITIAL_OFFSET_ROTATION_Export([MarshalAs(UnmanagedType.LPStr)] string pAnimDictName, [MarshalAs(UnmanagedType.LPStr)] string pAnimName, float scenePositionX, float scenePositionY, float scenePositionZ, float sceneOrientationX, float sceneOrientationY, float sceneOrientationZ, float phase, int RotOrder);
+        private static partial void GET_ANIM_INITIAL_OFFSET_ROTATION_Export([MarshalAs(UnmanagedType.LPStr)] string pAnimDictName, [MarshalAs(UnmanagedType.LPStr)] string pAnimName, float scenePositionX, float scenePositionY, float scenePositionZ, float sceneOrientationX, float sceneOrientationY, float sceneOrientationZ, float phase, int RotOrder, out Vector3 result);
 
         public static Vector3 GET_ANIM_INITIAL_OFFSET_ROTATION(string pAnimDictName, string pAnimName, float scenePositionX, float scenePositionY, float scenePositionZ, float sceneOrientationX, float sceneOrientationY, float sceneOrientationZ, float phase, int RotOrder)
         {
-            return GET_ANIM_INITIAL_OFFSET_ROTATION_Export(pAnimDictName, pAnimName, scenePositionX, scenePositionY, scenePositionZ, sceneOrientationX, sceneOrientationY, sceneOrientationZ, phase, RotOrder);
+            Vector3 result;
+            GET_ANIM_INITIAL_OFFSET_ROTATION_Export(pAnimDictName, pAnimName, scenePositionX, scenePositionY, scenePositionZ, sceneOrientationX, sceneOrientationY, sceneOrientationZ, phase, RotOrder, out result);
+            return result;
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
@@ -31949,11 +32015,13 @@ namespace Natives
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-        private static partial Vector3 GET_PED_DEFENSIVE_AREA_POSITION_Export(Ped PedIndex, BOOL bApplyToSecondaryDefensiveArea);
+        private static partial void GET_PED_DEFENSIVE_AREA_POSITION_Export(Ped PedIndex, BOOL bApplyToSecondaryDefensiveArea, out Vector3 result);
 
         public static Vector3 GET_PED_DEFENSIVE_AREA_POSITION(Ped PedIndex, bool bApplyToSecondaryDefensiveArea)
         {
-            return GET_PED_DEFENSIVE_AREA_POSITION_Export(PedIndex, bApplyToSecondaryDefensiveArea ? 1 : 0);
+            Vector3 result;
+            GET_PED_DEFENSIVE_AREA_POSITION_Export(PedIndex, bApplyToSecondaryDefensiveArea ? 1 : 0, out result);
+            return result;
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
@@ -32317,11 +32385,13 @@ namespace Natives
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-        private static partial Vector3 GET_PED_BONE_COORDS_Export(Ped PedIndex, int bone, float vecOffsetX, float vecOffsetY, float vecOffsetZ);
+        private static partial void GET_PED_BONE_COORDS_Export(Ped PedIndex, int bone, float vecOffsetX, float vecOffsetY, float vecOffsetZ, out Vector3 result);
 
         public static Vector3 GET_PED_BONE_COORDS(Ped PedIndex, int bone, float vecOffsetX, float vecOffsetY, float vecOffsetZ)
         {
-            return GET_PED_BONE_COORDS_Export(PedIndex, bone, vecOffsetX, vecOffsetY, vecOffsetZ);
+            Vector3 result;
+            GET_PED_BONE_COORDS_Export(PedIndex, bone, vecOffsetX, vecOffsetY, vecOffsetZ, out result);
+            return result;
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
@@ -36665,11 +36735,13 @@ namespace Natives
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-        private static partial Vector3 _0x5EE6FCCC9C832CA2_Export(Any p0);
+        private static partial void _0x5EE6FCCC9C832CA2_Export(Any p0, out Vector3 result);
 
         public static Vector3 _0x5EE6FCCC9C832CA2(Any p0)
         {
-            return _0x5EE6FCCC9C832CA2_Export(p0);
+            Vector3 result;
+            _0x5EE6FCCC9C832CA2_Export(p0, out result);
+            return result;
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
@@ -36689,11 +36761,13 @@ namespace Natives
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-        private static partial Vector3 _0x94995829ED15A598_Export(Any p0);
+        private static partial void _0x94995829ED15A598_Export(Any p0, out Vector3 result);
 
         public static Vector3 _0x94995829ED15A598(Any p0)
         {
-            return _0x94995829ED15A598_Export(p0);
+            Vector3 result;
+            _0x94995829ED15A598_Export(p0, out result);
+            return result;
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
@@ -37473,19 +37547,23 @@ namespace Natives
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-        private static partial Vector3 GET_ROPE_LAST_VERTEX_COORD_Export(int ropeID);
+        private static partial void GET_ROPE_LAST_VERTEX_COORD_Export(int ropeID, out Vector3 result);
 
         public static Vector3 GET_ROPE_LAST_VERTEX_COORD(int ropeID)
         {
-            return GET_ROPE_LAST_VERTEX_COORD_Export(ropeID);
+            Vector3 result;
+            GET_ROPE_LAST_VERTEX_COORD_Export(ropeID, out result);
+            return result;
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-        private static partial Vector3 GET_ROPE_VERTEX_COORD_Export(int ropeID, int vtxIndex);
+        private static partial void GET_ROPE_VERTEX_COORD_Export(int ropeID, int vtxIndex, out Vector3 result);
 
         public static Vector3 GET_ROPE_VERTEX_COORD(int ropeID, int vtxIndex)
         {
-            return GET_ROPE_VERTEX_COORD_Export(ropeID, vtxIndex);
+            Vector3 result;
+            GET_ROPE_VERTEX_COORD_Export(ropeID, vtxIndex, out result);
+            return result;
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
@@ -46671,19 +46749,23 @@ namespace Natives
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-        private static partial Vector3 GET_SCRIPTED_COVER_POINT_COORDS_Export(ScrHandle index);
+        private static partial void GET_SCRIPTED_COVER_POINT_COORDS_Export(ScrHandle index, out Vector3 result);
 
         public static Vector3 GET_SCRIPTED_COVER_POINT_COORDS(ScrHandle index)
         {
-            return GET_SCRIPTED_COVER_POINT_COORDS_Export(index);
+            Vector3 result;
+            GET_SCRIPTED_COVER_POINT_COORDS_Export(index, out result);
+            return result;
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-        private static partial Vector3 _0xE116F6F2DA2D777E_Export(Any p0);
+        private static partial void _0xE116F6F2DA2D777E_Export(Any p0, out Vector3 result);
 
         public static Vector3 _0xE116F6F2DA2D777E(Any p0)
         {
-            return _0xE116F6F2DA2D777E_Export(p0);
+            Vector3 result;
+            _0xE116F6F2DA2D777E_Export(p0, out result);
+            return result;
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
@@ -47047,19 +47129,23 @@ namespace Natives
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-        private static partial Vector3 _GET_SCENARIO_POINT_COORDS_Export(int scenario, BOOL p1);
+        private static partial void _GET_SCENARIO_POINT_COORDS_Export(int scenario, BOOL p1, out Vector3 result);
 
         public static Vector3 _GET_SCENARIO_POINT_COORDS(int scenario, bool p1)
         {
-            return _GET_SCENARIO_POINT_COORDS_Export(scenario, p1 ? 1 : 0);
+            Vector3 result;
+            _GET_SCENARIO_POINT_COORDS_Export(scenario, p1 ? 1 : 0, out result);
+            return result;
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-        private static partial Vector3 _0x91CB5E431F579BA1_Export(Any p0);
+        private static partial void _0x91CB5E431F579BA1_Export(Any p0, out Vector3 result);
 
         public static Vector3 _0x91CB5E431F579BA1(Any p0)
         {
-            return _0x91CB5E431F579BA1_Export(p0);
+            Vector3 result;
+            _0x91CB5E431F579BA1_Export(p0, out result);
+            return result;
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
@@ -47727,11 +47813,13 @@ namespace Natives
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-        private static partial Vector3 _0x865732725536EE39_Export(Any p0);
+        private static partial void _0x865732725536EE39_Export(Any p0, out Vector3 result);
 
         public static Vector3 _0x865732725536EE39(Any p0)
         {
-            return _0x865732725536EE39_Export(p0);
+            Vector3 result;
+            _0x865732725536EE39_Export(p0, out result);
+            return result;
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
@@ -52273,11 +52361,13 @@ namespace Natives
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-        private static partial Vector3 _GET_TRAIN_POSITION_ON_TRACK_Export(int trackIndex);
+        private static partial void _GET_TRAIN_POSITION_ON_TRACK_Export(int trackIndex, out Vector3 result);
 
         public static Vector3 _GET_TRAIN_POSITION_ON_TRACK(int trackIndex)
         {
-            return _GET_TRAIN_POSITION_ON_TRACK_Export(trackIndex);
+            Vector3 result;
+            _GET_TRAIN_POSITION_ON_TRACK_Export(trackIndex, out result);
+            return result;
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
@@ -52425,11 +52515,13 @@ namespace Natives
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-        private static partial Vector3 _GET_NEAREST_TRAIN_TRACK_POSITION_Export(float x, float y, float z);
+        private static partial void _GET_NEAREST_TRAIN_TRACK_POSITION_Export(float x, float y, float z, out Vector3 result);
 
         public static Vector3 _GET_NEAREST_TRAIN_TRACK_POSITION(float x, float y, float z)
         {
-            return _GET_NEAREST_TRAIN_TRACK_POSITION_Export(x, y, z);
+            Vector3 result;
+            _GET_NEAREST_TRAIN_TRACK_POSITION_Export(x, y, z, out result);
+            return result;
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
@@ -52601,19 +52693,23 @@ namespace Natives
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-        private static partial Vector3 GET_POSITION_OF_VEHICLE_RECORDING_AT_TIME_Export(int iRecordingNumber, float fTime, [MarshalAs(UnmanagedType.LPStr)] string pRecordingName);
+        private static partial void GET_POSITION_OF_VEHICLE_RECORDING_AT_TIME_Export(int iRecordingNumber, float fTime, [MarshalAs(UnmanagedType.LPStr)] string pRecordingName, out Vector3 result);
 
         public static Vector3 GET_POSITION_OF_VEHICLE_RECORDING_AT_TIME(int iRecordingNumber, float fTime, string pRecordingName)
         {
-            return GET_POSITION_OF_VEHICLE_RECORDING_AT_TIME_Export(iRecordingNumber, fTime, pRecordingName);
+            Vector3 result;
+            GET_POSITION_OF_VEHICLE_RECORDING_AT_TIME_Export(iRecordingNumber, fTime, pRecordingName, out result);
+            return result;
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-        private static partial Vector3 GET_ROTATION_OF_VEHICLE_RECORDING_AT_TIME_Export(int iRecordingNumber, float fTime, [MarshalAs(UnmanagedType.LPStr)] string pRecordingName);
+        private static partial void GET_ROTATION_OF_VEHICLE_RECORDING_AT_TIME_Export(int iRecordingNumber, float fTime, [MarshalAs(UnmanagedType.LPStr)] string pRecordingName, out Vector3 result);
 
         public static Vector3 GET_ROTATION_OF_VEHICLE_RECORDING_AT_TIME(int iRecordingNumber, float fTime, string pRecordingName)
         {
-            return GET_ROTATION_OF_VEHICLE_RECORDING_AT_TIME_Export(iRecordingNumber, fTime, pRecordingName);
+            Vector3 result;
+            GET_ROTATION_OF_VEHICLE_RECORDING_AT_TIME_Export(iRecordingNumber, fTime, pRecordingName, out result);
+            return result;
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
@@ -52977,11 +53073,13 @@ namespace Natives
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-        private static partial Vector3 _0x785639D89F8451AB_Export(Any p0, Any p1);
+        private static partial void _0x785639D89F8451AB_Export(Any p0, Any p1, out Vector3 result);
 
         public static Vector3 _0x785639D89F8451AB(Any p0, Any p1)
         {
-            return _0x785639D89F8451AB_Export(p0, p1);
+            Vector3 result;
+            _0x785639D89F8451AB_Export(p0, p1, out result);
+            return result;
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
@@ -53121,11 +53219,13 @@ namespace Natives
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-        private static partial Vector3 _GET_STATION_COORDS_FROM_TRAIN_STATION_DATA_Export(int trackIndex, int stationIndex);
+        private static partial void _GET_STATION_COORDS_FROM_TRAIN_STATION_DATA_Export(int trackIndex, int stationIndex, out Vector3 result);
 
         public static Vector3 _GET_STATION_COORDS_FROM_TRAIN_STATION_DATA(int trackIndex, int stationIndex)
         {
-            return _GET_STATION_COORDS_FROM_TRAIN_STATION_DATA_Export(trackIndex, stationIndex);
+            Vector3 result;
+            _GET_STATION_COORDS_FROM_TRAIN_STATION_DATA_Export(trackIndex, stationIndex, out result);
+            return result;
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
@@ -54017,11 +54117,13 @@ namespace Natives
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-        private static partial Vector3 _GET_CHECKPOINT_TRAIN_SPAWN_LOCATION_Export(int trackIndex, float x, float y, float z, float distance, BOOL direction);
+        private static partial void _GET_CHECKPOINT_TRAIN_SPAWN_LOCATION_Export(int trackIndex, float x, float y, float z, float distance, BOOL direction, out Vector3 result);
 
         public static Vector3 _GET_CHECKPOINT_TRAIN_SPAWN_LOCATION(int trackIndex, float x, float y, float z, float distance, bool direction)
         {
-            return _GET_CHECKPOINT_TRAIN_SPAWN_LOCATION_Export(trackIndex, x, y, z, distance, direction ? 1 : 0);
+            Vector3 result;
+            _GET_CHECKPOINT_TRAIN_SPAWN_LOCATION_Export(trackIndex, x, y, z, distance, direction ? 1 : 0, out result);
+            return result;
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
@@ -55041,11 +55143,13 @@ namespace Natives
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-        private static partial Vector3 GET_VOLUME_COORDS_Export(Volume volume);
+        private static partial void GET_VOLUME_COORDS_Export(Volume volume, out Vector3 result);
 
         public static Vector3 GET_VOLUME_COORDS(Volume volume)
         {
-            return GET_VOLUME_COORDS_Export(volume);
+            Vector3 result;
+            GET_VOLUME_COORDS_Export(volume, out result);
+            return result;
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
@@ -55057,11 +55161,13 @@ namespace Natives
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-        private static partial Vector3 GET_VOLUME_ROTATION_Export(Volume volume);
+        private static partial void GET_VOLUME_ROTATION_Export(Volume volume, out Vector3 result);
 
         public static Vector3 GET_VOLUME_ROTATION(Volume volume)
         {
-            return GET_VOLUME_ROTATION_Export(volume);
+            Vector3 result;
+            GET_VOLUME_ROTATION_Export(volume, out result);
+            return result;
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
@@ -55073,11 +55179,13 @@ namespace Natives
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-        private static partial Vector3 GET_VOLUME_SCALE_Export(Volume volume);
+        private static partial void GET_VOLUME_SCALE_Export(Volume volume, out Vector3 result);
 
         public static Vector3 GET_VOLUME_SCALE(Volume volume)
         {
-            return GET_VOLUME_SCALE_Export(volume);
+            Vector3 result;
+            GET_VOLUME_SCALE_Export(volume, out result);
+            return result;
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
@@ -55121,11 +55229,13 @@ namespace Natives
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-        private static partial Vector3 _0xD882C5B3991575B7_Export(Any p0, Any p1, Any p2, Any p3, Any p4);
+        private static partial void _0xD882C5B3991575B7_Export(Any p0, Any p1, Any p2, Any p3, Any p4, out Vector3 result);
 
         public static Vector3 _0xD882C5B3991575B7(Any p0, Any p1, Any p2, Any p3, Any p4)
         {
-            return _0xD882C5B3991575B7_Export(p0, p1, p2, p3, p4);
+            Vector3 result;
+            _0xD882C5B3991575B7_Export(p0, p1, p2, p3, p4, out result);
+            return result;
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
@@ -55257,11 +55367,13 @@ namespace Natives
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]
-        private static partial Vector3 _0xC4019CF9AE8E931A_Export(int volLockRequestId);
+        private static partial void _0xC4019CF9AE8E931A_Export(int volLockRequestId, out Vector3 result);
 
         public static Vector3 _0xC4019CF9AE8E931A(int volLockRequestId)
         {
-            return _0xC4019CF9AE8E931A_Export(volLockRequestId);
+            Vector3 result;
+            _0xC4019CF9AE8E931A_Export(volLockRequestId, out result);
+            return result;
         }
 
         [LibraryImport("RDONatives.dll"), UnmanagedCallConv(CallConvs = new Type[] { typeof(System.Runtime.CompilerServices.CallConvCdecl) })]

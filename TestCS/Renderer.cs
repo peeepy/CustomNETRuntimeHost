@@ -1,87 +1,129 @@
-﻿// using System;
-// using System.Collections.Generic;
-// using System.Runtime.CompilerServices;
-// using System.Runtime.InteropServices;
-// using ImGuiNET;
-//
-// namespace RDR2CS
-// {
-//     public partial class Renderer
-//     {
-//         // Delegate types
-//         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-//         private delegate void RenderCallbackDelegate(IntPtr userData);
-//
-//         [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-//         private delegate void WindowProcCallbackFunction(IntPtr hwnd, uint uMsg, IntPtr wParam, IntPtr lParam);
-//
-//         // P/Invoke declarations
-//         [LibraryImport("RDONatives.dll", EntryPoint = "AddRendererCallBackWrapper")]
-//         [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
-//         [return: MarshalAs(UnmanagedType.Bool)]
-//         private static partial bool AddRendererCallBackWrapper(RenderCallbackDelegate callback, IntPtr userData, uint priority);
-//
-//         [LibraryImport("RDONatives.dll", EntryPoint = "AddWindowProcedureCallbackWrapper")]
-//         [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
-//         static partial void AddWindowProcedureCallbackWrapper(WindowProcCallbackFunction callback);
-//
-//         [LibraryImport("RDONatives.dll", EntryPoint = "RendererDestroy")]
-//         [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
-//         private static partial void RendererDestroy();
-//
-//         [LibraryImport("RDONatives.dll", EntryPoint = "RendererInit")]
-//         [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
-//         [return: MarshalAs(UnmanagedType.Bool)]
-//         private static partial bool RendererInit();
-//
-//         // Storage for callbacks
-//         private static Dictionary<uint, (Action Callback, RenderCallbackDelegate NativeCallback)> _renderCallbacks
-//             = new Dictionary<uint, (Action, RenderCallbackDelegate)>();
-//
-//         private static List<WindowProcCallbackFunction> _windowProcCallbacks = new List<WindowProcCallbackFunction>();
-//
-//         // Public methods
-//         public static bool AddRendererCallback(Action callback, uint priority)
-//         {
-//             if (_renderCallbacks.ContainsKey(priority))
-//             {
-//                 return false; // Already exists
-//             }
-//
-//             RenderCallbackDelegate nativeCallback = (IntPtr userData) => { callback(); };
-//
-//             bool success = AddRendererCallBackWrapper(nativeCallback, IntPtr.Zero, priority);
-//
-//             if (success)
-//             {
-//                 _renderCallbacks[priority] = (callback, nativeCallback);
-//             }
-//
-//             return success;
-//         }
-//
-//         public static void AddWindowProcedureCallback(Action<IntPtr, uint, IntPtr, IntPtr> callback)
-//         {
-//             WindowProcCallbackFunction wrappedCallback = (hwnd, uMsg, wParam, lParam) =>
-//             {
-//                 callback(hwnd, uMsg, wParam, lParam);
-//             };
-//             _windowProcCallbacks.Add(wrappedCallback);
-//             AddWindowProcedureCallbackWrapper(wrappedCallback);
-//         }
-//
-//         public static void Destroy()
-//         {
-//             // Call the native Destroy implementation
-//             RendererDestroy();
-//
-//             // After native destruction, destroy the ImGui context
-//             ImGui.DestroyContext();
-//         }
-//
-//         public static bool Init()
-//         {
-//             return RendererInit();
-//         }
-//     };
-// }
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Silk.NET.Vulkan;
+using Vortice.DXGI;
+using Vortice.Direct3D12;
+using Vortice.DXCore;
+using System.Collections;
+using Silk.NET.Core.Native;
+using Vortice.Vulkan;
+using Win32;
+using System.Reflection;
+
+namespace TestCS
+{
+    public class Renderer
+    {
+        private Renderer() { }
+
+        private static Renderer GetInstance()
+        {
+            return new Renderer();
+        }
+
+        [DllImport("cimgui", CallingConvention = CallingConvention.Cdecl)]
+        internal static unsafe extern bool ImGui_ImplWin32_Init(void* hwnd);
+
+        // DX12
+        private SwapChainDescription _SwapChainDesc;
+        private IDXGISwapChain1 _GameSwapChain;
+        private IDXGISwapChain3? _SwapChain;
+        private ID3D12Device? _Device;
+        private ID3D12CommandQueue? _CommandQueue;
+        private ID3D12CommandAllocator? _CommandAllocator;
+        private ID3D12GraphicsCommandList? _CommandList;
+        private ID3D12DescriptorHeap? _BackbufferDescriptorHeap;
+        private ID3D12DescriptorHeap? _DescriptorHeap;
+        private ID3D12Fence? _Fence;
+
+
+        // Vulkan
+        private static List<String> InstanceExtensions = ["VK_KHR_surface"];
+        private static List<String> ValidationLayers = ["VK_LAYER_KHRONOS_validation"];
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct ImGui_ImplVulkanH_Frame
+        {
+            public CommandPool CommandPool;       // VkCommandPool
+            public CommandBuffer CommandBuffer;     // VkCommandBuffer
+            public Fence Fence;             // VkFence
+            public Image Backbuffer;        // VkImage
+            public ImageView BackbufferView;    // VkImageView
+            public Framebuffer Framebuffer;       // VkFramebuffer
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct ImGui_ImplVulkanH_FrameSemaphores
+        {
+            Silk.NET.Vulkan.Semaphore ImageAcquiredSemaphore;
+            Silk.NET.Vulkan.Semaphore RenderCompleteSemaphore;
+        };
+        private Vk _vk = Vk.GetApi();
+        private Instance _Vkinstance;
+        private PhysicalDevice _VkphysicalDevice;
+        private Device _VkDevice;
+        private Device _VkFakeDevice;
+        private Extent2D _VkImageExtent;
+        private RenderPass _VkRenderPass;
+        private DescriptorPool _VkDescriptorPool;
+        private PipelineCache _VkPipelineCache;
+        private UInt32 _VkMinImageCount = 2;
+        private AllocationCallbacks _VkAllocator;
+        private List<QueueFamilyProperties> _VKQueueFamilies;
+        private ImGui_ImplVulkanH_Frame[] _VkFrames = new ImGui_ImplVulkanH_Frame[8];
+        private ImGui_ImplVulkanH_FrameSemaphores[] m_VkFrameSemaphores = new ImGui_ImplVulkanH_FrameSemaphores[8];
+
+        private unsafe void InitVulkan()
+        {
+            InstanceCreateInfo instanceInfo = new InstanceCreateInfo
+            {
+                SType = StructureType.InstanceCreateInfo,
+                EnabledExtensionCount = (UInt32)InstanceExtensions.Count,
+                PpEnabledExtensionNames = (byte**)SilkMarshal.StringArrayToPtr(InstanceExtensions.ToArray())
+            };
+
+            try
+            {
+                if (_vk.CreateInstance(instanceInfo, _VkAllocator, out _Vkinstance) != Result.Success)
+                {
+                    LOG.ERROR("Vulkan Instance could not be created");
+                }
+            }
+            catch(Exception e)
+            {
+                LOG.ERROR($"{e}");
+            }
+
+            UInt32 GpuCount;
+
+            try
+            {
+                if (_vk.EnumeratePhysicalDevices(_Vkinstance, &GpuCount, null) != Result.Success)
+                {
+                    LOG.ERROR("vkEnumeratePhysicalDevices failed");
+                }
+            }
+            catch (Exception e)
+            {
+                LOG.ERROR($"{e}");
+            }
+
+            // TODO: Add device creation methods, etc
+
+            //DestroyDevice(_VkFakeDevice, _VkAllocator); // can't do this?
+            ImGui.CreateContext();
+            ImGui_ImplWin32_Init(Pointers.Hwnd);
+
+
+        }
+        
+
+        static void VkSetScreenSize(Extent2D extent)
+        {
+            GetInstance()._VkImageExtent = extent;
+        }
+    }
+}
