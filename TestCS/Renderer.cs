@@ -76,72 +76,72 @@ namespace TestCS
         private ImGui_ImplVulkanH_Frame[] _VkFrames = new ImGui_ImplVulkanH_Frame[8];
         private ImGui_ImplVulkanH_FrameSemaphores[] m_VkFrameSemaphores = new ImGui_ImplVulkanH_FrameSemaphores[8];
 
-        private unsafe bool InitDX12()
-        {
-            if (!Pointers.SwapChain)
-            {
-                LOG.WARNING("SwapChain pointer is invalid!");
+  //      private unsafe bool InitDX12()
+  //      {
+  //          if (Pointers.Instance.SwapChain != nint.Zero)
+  //          {
+  //              LOG.WARNING("SwapChain pointer is invalid!");
 
-                return false;
-            }
+  //              return false;
+  //          }
 
-            if (!Pointers.CommandQueue)
-            {
-                LOG.WARNING("CommandQueue pointer is invalid!");
+  //          if (Pointers.Instance.CommandQueue != nint.Zero)
+  //          {
+  //              LOG.WARNING("CommandQueue pointer is invalid!");
 
-                return false;
-            }
+  //              return false;
+  //          }
 
-            _GameSwapChain = new IDXGISwapChain1(Pointers.SwapChain);
-            if (_GameSwapChain == null)
-            {
-                LOG.WARNING("WARNING: Dereferenced SwapChain pointer is invalid!");
-                return false;
-            }
+  //          _GameSwapChain = new IDXGISwapChain1(Pointers.Instance.SwapChain);
+  //          if (_GameSwapChain == null)
+  //          {
+  //              LOG.WARNING("WARNING: Dereferenced SwapChain pointer is invalid!");
+  //              return false;
+  //          }
 
-            // CommandQueue
-            _CommandQueue = new ID3D12CommandQueue(Pointers.CommandQueue);
-            if (_CommandQueue == null)
-            {
-                LOG.WARNING("WARNING: Dereferenced CommandQueue pointer is invalid!");
-                return false;
-            }
+  //          // CommandQueue
+  //          _CommandQueue = new ID3D12CommandQueue(Pointers.Instance.CommandQueue);
+  //          if (_CommandQueue == null)
+  //          {
+  //              LOG.WARNING("WARNING: Dereferenced CommandQueue pointer is invalid!");
+  //              return false;
+  //          }
 
-            // Query for IDXGISwapChain3 interface
-            _SwapChain = _GameSwapChain.QueryInterface<IDXGISwapChain3>();
-            if (_SwapChain == null)
-            {
-                Console.WriteLine("Failed to query IDXGISwapChain3 interface");
-                return false;
-            }
+  //          // Query for IDXGISwapChain3 interface
+  //          _SwapChain = _GameSwapChain.QueryInterface<IDXGISwapChain3>();
+  //          if (_SwapChain == null)
+  //          {
+  //              Console.WriteLine("Failed to query IDXGISwapChain3 interface");
+  //              return false;
+  //          }
 
-            Win32.HResult result = _SwapChain.GetDevice(typeof(ID3D12Device).GUID, out IntPtr devicePtr);
-            if (result.Failure)
-            {
-                Console.WriteLine($"Failed to get D3D12 Device with result: [{result}]");
-                return false;
-            }
+  ////          Win32.HResult result = _SwapChain.GetDevice(typeof(ID3D12Device).GUID, out IntPtr devicePtr);
+  ////          if (result.Failure)
+  ////          {
+  ////              Console.WriteLine($"Failed to get D3D12 Device with result: [{result}]");
+  ////              return false;
+  ////          }
 
-            _Device = new ID3D12Device(devicePtr);
+  ////          _Device = new ID3D12Device(devicePtr);
         
 
-        // Get the swap chain description
-        _SwapChainDesc = _SwapChain.Description;
+  ////      // Get the swap chain description
+  ////      _SwapChainDesc = _SwapChain.Description;
 
-            if (_Device->CreateFence(0, FenceFlags.None, __uuidof(ID3D12Fence), (void**)_Fence.GetAddressOf()); result < 0)
-		{
-                LOG(WARNING) << "Failed to create Fence with result: [" << result << "]";
+  ////          if (_Device->CreateFence(0, FenceFlags.None, __uuidof(ID3D12Fence), (void**)_Fence.GetAddressOf()); result < 0)
+		////{
+  ////              LOG(WARNING) << "Failed to create Fence with result: [" << result << "]";
 
-                return false;
-            }
+  ////              return false;
+  ////          }
 
-            if (const auto result = m_FenceEvent = CreateEventA(nullptr, FALSE, FALSE, nullptr); !result)
-		{
-                LOG(WARNING) << "Failed to create Fence Event!";
+  ////          if (const auto result = m_FenceEvent = CreateEventA(nullptr, FALSE, FALSE, nullptr); !result)
+		////{
+  ////              LOG(WARNING) << "Failed to create Fence Event!";
 
-                return false;
-            }
-        }
+  ////              return false;
+  ////          }
+  //      }
         private unsafe bool InitVulkan()
         {
             InstanceCreateInfo instanceInfo = new InstanceCreateInfo
@@ -177,7 +177,6 @@ namespace TestCS
                 LOG.ERROR($"{e}");
             }
 
-            // TODO: Add device creation methods, etc
             //select discrete gpu - if none is available use first device
             var devices = _vk.GetPhysicalDevices(_Vkinstance);
             foreach (var gpu in devices)
@@ -228,14 +227,15 @@ namespace TestCS
             if (_vk.CreateDevice(_VkphysicalDevice, ref deviceCreateInfo, ref _VkAllocator, out _VkFakeDevice) != Result.Success)
                 throw new Exception("Could not create device");
 
-            //Pointers.QueuePresentKHR = reinterpret_cast<void*>(vkGetDeviceProcAddr(m_VkFakeDevice, "vkQueuePresentKHR"));
-            //Pointers.CreateSwapchainKHR = reinterpret_cast<void*>(vkGetDeviceProcAddr(m_VkFakeDevice, "vkCreateSwapchainKHR"));
-            //Pointers.AcquireNextImageKHR = reinterpret_cast<void*>(vkGetDeviceProcAddr(m_VkFakeDevice, "vkAcquireNextImageKHR"));
-            //Pointers.AcquireNextImage2KHR = reinterpret_cast<void*>(vkGetDeviceProcAddr(m_VkFakeDevice, "vkAcquireNextImage2KHR"));
+            Pointers.Instance.QueuePresentKHR = _vk.GetDeviceProcAddr(_VkFakeDevice, "vkQueuePresentKHR");
+            Pointers.Instance.CreateSwapchainKHR = _vk.GetDeviceProcAddr(_VkFakeDevice, "vkCreateSwapchainKHR");
+            Pointers.Instance.AcquireNextImageKHR = _vk.GetDeviceProcAddr(_VkFakeDevice, "vkAcquireNextImageKHR");
+            Pointers.Instance.AcquireNextImage2KHR = _vk.GetDeviceProcAddr(_VkFakeDevice, "vkAcquireNextImage2KHR");
+            
 
             _vk.DestroyDevice(_VkFakeDevice, ref _VkAllocator);
             ImGui.CreateContext();
-            //ImGui_ImplWin32_Init(Pointers.Hwnd);
+            //ImGui_ImplWin32_Init(Pointers.Instance.Hwnd);
 
             LOG.INFO("Vulkan renderer has initialised successfully.");
             return true;
