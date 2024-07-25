@@ -20,8 +20,8 @@ namespace TestCS
             LOG.INFO("Scanning for pointers...");
             //TODO: Fix blocking of thread when this is initialising
             InitializeEverythingAsync().GetAwaiter().GetResult();
-            LOG.INFO($"Am I using Vulkan? Result: {Pointers.Instance.IsVulkan}");
-            LOG.INFO($"Hwnd pointer: {Pointers.Instance.Hwnd}");
+            //LOG.INFO($"Am I using Vulkan? Result: {Pointers.Instance.IsVulkan}");
+            //LOG.INFO($"Hwnd pointer: {Pointers.Instance.Hwnd}");
             LOG.INFO($"SwapChain pointer: {Pointers.Instance.SwapChain}");
             LOG.INFO($"CommandQueue pointer: {Pointers.Instance.CommandQueue}");
 

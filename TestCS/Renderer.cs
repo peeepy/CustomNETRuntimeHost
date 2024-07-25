@@ -227,10 +227,10 @@ namespace TestCS
             if (_vk.CreateDevice(_VkphysicalDevice, ref deviceCreateInfo, ref _VkAllocator, out _VkFakeDevice) != Result.Success)
                 throw new Exception("Could not create device");
 
-            Pointers.Instance.QueuePresentKHR = _vk.GetDeviceProcAddr(_VkFakeDevice, "vkQueuePresentKHR");
-            Pointers.Instance.CreateSwapchainKHR = _vk.GetDeviceProcAddr(_VkFakeDevice, "vkCreateSwapchainKHR");
-            Pointers.Instance.AcquireNextImageKHR = _vk.GetDeviceProcAddr(_VkFakeDevice, "vkAcquireNextImageKHR");
-            Pointers.Instance.AcquireNextImage2KHR = _vk.GetDeviceProcAddr(_VkFakeDevice, "vkAcquireNextImage2KHR");
+            //Pointers.Instance.QueuePresentKHR = _vk.GetDeviceProcAddr(_VkFakeDevice, "vkQueuePresentKHR");
+            //Pointers.Instance.CreateSwapchainKHR = _vk.GetDeviceProcAddr(_VkFakeDevice, "vkCreateSwapchainKHR");
+            //Pointers.Instance.AcquireNextImageKHR = _vk.GetDeviceProcAddr(_VkFakeDevice, "vkAcquireNextImageKHR");
+            //Pointers.Instance.AcquireNextImage2KHR = _vk.GetDeviceProcAddr(_VkFakeDevice, "vkAcquireNextImage2KHR");
             
 
             _vk.DestroyDevice(_VkFakeDevice, ref _VkAllocator);
