@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 using System.IO;
 using System.Text;
 using Natives;
-using RDR2CS;
+using TestCS.Memory;
 
 namespace TestCS
 {
@@ -19,36 +19,40 @@ namespace TestCS
             LOG.INFO($"Current time is: {DateTime.Now}");
             LOG.INFO("Scanning for pointers...");
             //TODO: Fix blocking of thread when this is initialising
-            InitializeEverythingAsync().GetAwaiter().GetResult();
             //LOG.INFO($"Am I using Vulkan? Result: {Pointers.Instance.IsVulkan}");
-            //LOG.INFO($"Hwnd pointer: {Pointers.Instance.Hwnd}");
-            LOG.INFO($"SwapChain pointer: {Pointers.Instance.SwapChain}");
-            LOG.INFO($"CommandQueue pointer: {Pointers.Instance.CommandQueue}");
+            //LOG.INFO($"Hwnd pointer: {Pointers.Instance.Hwnd
+            ModuleManager.Instance.LoadModules();
+            PointerData.Pointers.Init().GetAwaiter().GetResult();
+            //unsafe
+            //{
+            //    LOG.INFO($"SwapChain pointer: {(IntPtr)PointerData.SwapChain:X}");
+            //}
+
 
             ScriptManager.Instance.Init();
             LOG.INFO("ScriptMgr initialised.");
         }
 
-        private static async Task InitializeEverythingAsync()
-        {
-            ModuleMgr.LoadModules();
-            await Pointers.Instance.InitAsync();
-            try
-            {
-                bool initialized = await Pointers.Instance.WaitForInitializationAsync();
-                if (initialized)
-                {
-                    LOG.INFO("Pointers initialised.");
-                }
-                else
-                {
-                    LOG.ERROR("Pointers initialization failed");
-                }
-            }
-            catch (Exception ex)
-            {
-                LOG.WARNING($"Error during pointers initialization or checking: {ex}");
-            }
-        }
+        //private static async Task InitializeEverythingAsync()
+        //{
+        //    Memory.ModuleManager.LoadModules();
+        //    await Pointers.Instance.InitAsync();
+        //    try
+        //    {
+        //        bool initialized = await Pointers.Instance.WaitForInitializationAsync();
+        //        if (initialized)
+        //        {
+        //            LOG.INFO("Pointers initialised.");
+        //        }
+        //        else
+        //        {
+        //            LOG.ERROR("Pointers initialization failed");
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        LOG.WARNING($"Error during pointers initialization or checking: {ex}");
+        //    }
+        //}
     }
 }

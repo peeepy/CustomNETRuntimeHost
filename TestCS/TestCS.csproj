@@ -11,6 +11,10 @@
 
   <ItemGroup>
     <PackageReference Include="ImGui.NET" Version="1.90.9.1" />
+    <PackageReference Include="SharpDX" Version="4.2.0" />
+    <PackageReference Include="SharpDX.Direct3D12" Version="4.2.0" />
+    <PackageReference Include="SharpDX.DirectManipulation" Version="4.2.0" />
+    <PackageReference Include="SharpDX.DXGI" Version="4.2.0" />
     <PackageReference Include="Silk.NET.Vulkan.Extensions.KHR" Version="2.21.0" />
     <PackageReference Include="Vortice.Direct3D12" Version="3.5.0" />
     <PackageReference Include="Vortice.DirectX" Version="3.5.0" />
