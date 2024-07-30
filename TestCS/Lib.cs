@@ -2,8 +2,9 @@
 using System.Runtime.InteropServices;
 using System.IO;
 using System.Text;
-using Natives;
+//using Natives;
 using TestCS.Memory;
+using static TestCS.Memory.PointerData;
 
 namespace TestCS
 {
@@ -14,23 +15,30 @@ namespace TestCS
         [UnmanagedCallersOnly]
         public static void Main()
         {
-            Init("TestCS", "D:\\Coding\\csharp\\CustomNETRuntimeHost\\output\\init.log");
-            LOG.INFO("Hello from C#! This console was created by the injected DLL.");
+            Logger.Init("TestCS", "D:\\Coding\\csharp\\CustomNETRuntimeHost\\output\\init.log");
             LOG.INFO($"Current time is: {DateTime.Now}");
+            ModuleManager.Instance.LoadModules();
+            LOG.INFO("Loaded modules.");
             LOG.INFO("Scanning for pointers...");
             //TODO: Fix blocking of thread when this is initialising
             //LOG.INFO($"Am I using Vulkan? Result: {Pointers.Instance.IsVulkan}");
             //LOG.INFO($"Hwnd pointer: {Pointers.Instance.Hwnd
-            ModuleManager.Instance.LoadModules();
-            PointerData.Pointers.Init().GetAwaiter().GetResult();
-            //unsafe
-            //{
-            //    LOG.INFO($"SwapChain pointer: {(IntPtr)PointerData.SwapChain:X}");
-            //}
-
-
-            ScriptManager.Instance.Init();
-            LOG.INFO("ScriptMgr initialised.");
+            bool initComplete = false;
+            Pointers.Init(success =>
+            {
+                if (success)
+                {
+                    LOG.INFO("Patterns found");
+                    ScriptManager.Instance.Init();
+                    LOG.INFO("ScriptMgr initialised.");
+                }
+                else
+                {
+                    LOG.ERROR("Patterns could not be found");
+                    // Handle the failure case
+                }
+                initComplete = true;
+            }); 
         }
 
         //private static async Task InitializeEverythingAsync()

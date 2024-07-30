@@ -40,5 +40,12 @@ namespace TestCS.Memory
         [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
         [return: MarshalAs(UnmanagedType.Bool)]
         internal static partial bool IsModuleValid(IntPtr modulePtr);
+
+        [LibraryImport("RDONatives.dll")]
+        [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        internal static partial bool ScanPatternWrapper(IntPtr moduleBase, IntPtr moduleEnd,
+                                           byte[] pattern, int patternSize,
+                                           byte[] mask, out IntPtr result);
     }
 }

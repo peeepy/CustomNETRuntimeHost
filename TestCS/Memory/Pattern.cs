@@ -25,19 +25,19 @@ namespace TestCS.Memory
     {
         string Name { get; }
         ReadOnlySpan<byte?> Signature { get; }
+        (byte[] pattern, byte[] mask) GetNativePattern();
     }
 
     public sealed class Pattern : IPattern
     {
-        private readonly string m_Name;
-        private readonly byte?[] m_Signature;
+        private string m_Name;
+        private byte?[] m_Signature;
 
         public Pattern(string name, string signatureString)
         {
             m_Name = name;
             var signature = new Signature(signatureString);
             m_Signature = new byte?[signature.SignatureByteLength];
-
             int pos = 0;
             for (int i = 0; i < signature.Length; i++)
             {
@@ -57,6 +57,28 @@ namespace TestCS.Memory
 
         public string Name => m_Name;
         public ReadOnlySpan<byte?> Signature => m_Signature;
+
+        public (byte[] pattern, byte[] mask) GetNativePattern()
+        {
+            byte[] pattern = new byte[m_Signature.Length];
+            byte[] mask = new byte[m_Signature.Length];
+
+            for (int i = 0; i < m_Signature.Length; i++)
+            {
+                if (m_Signature[i].HasValue)
+                {
+                    pattern[i] = m_Signature[i].Value;
+                    mask[i] = 1;
+                }
+                else
+                {
+                    pattern[i] = 0;
+                    mask[i] = 0;
+                }
+            }
+
+            return (pattern, mask);
+        }
 
         public override string ToString()
         {

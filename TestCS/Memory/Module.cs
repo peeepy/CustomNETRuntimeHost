@@ -15,9 +15,9 @@ namespace TestCS.Memory
             _modulePtr = modulePtr;
         }
 
-        public UIntPtr Base
+        public IntPtr Base
         {
-            get { return (UIntPtr)NativeModuleFuncs.GetModuleBase(_modulePtr); }
+            get { return (IntPtr)NativeModuleFuncs.GetModuleBase(_modulePtr); }
         }
 
         public ulong Size
@@ -25,9 +25,9 @@ namespace TestCS.Memory
             get { return NativeModuleFuncs.GetModuleSize(_modulePtr); }
         }
 
-        public UIntPtr End
+        public IntPtr End
         {
-            get { return (UIntPtr)NativeModuleFuncs.GetModuleEnd(_modulePtr); }
+            get { return (IntPtr)NativeModuleFuncs.GetModuleEnd(_modulePtr); }
         }
 
         public bool Valid()

@@ -1,5 +1,6 @@
 ﻿using System;
-using System.Runtime.InteropServices;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace TestCS.Memory
 {
@@ -22,55 +23,46 @@ namespace TestCS.Memory
             m_Patterns[pattern] = func;
         }
 
-        public async Task<bool> ScanAsync()
+        public void ScanAsync(Action<bool> callback)
         {
-            if (m_Module == null || !m_Module.Valid())
-                return false;
-
-            var tasks = m_Patterns.Select(pair =>
-                Task.Run(() => ScanInternal(pair.Key, pair.Value))).ToList();
-
-            var results = await Task.WhenAll(tasks);
-
-            bool scanSuccess = results.All(result => result);
-
-            if (!scanSuccess)
+            if (!m_Module.Valid())
             {
-                LOG.ERROR("Some patterns have not been found, continuing would be foolish.");
-                // In a real application, you might want to use a proper logging framework
-                // and possibly throw an exception here.
+                callback(false);
+                return;
             }
 
-            return scanSuccess;
-        }
-
-        public unsafe bool ScanInternal(IPattern pattern, PatternFunc func)
-        {
-            ReadOnlySpan<byte?> signature = pattern.Signature;
-            for (nuint i = m_Module.Base; i < m_Module.End; i += 1)
-            {
-                if (i + (nuint)signature.Length > m_Module.End)
-                    break;
-                byte* instruction = (byte*)i.ToPointer();
-                bool found = true;
-                for (int instructionIdx = 0; instructionIdx < signature.Length; ++instructionIdx)
+            // Simulate async operation
+                bool allFound = true;
+                foreach (var pattern in m_Patterns.Keys)
                 {
-                    if (signature[instructionIdx].HasValue && signature[instructionIdx].Value != instruction[instructionIdx])
+                    bool found = ScanInternal(pattern);
+                    if (!found)
                     {
-                        found = false;
-                        break;
+                        allFound = false;
+                        LOG.ERROR($"Failed to find pattern [{pattern.Name}]");
                     }
                 }
-                if (found)
-                {
-                    LOG.INFO($"Found pattern [{pattern.Name}] : [0x{i:X}]");
-                    PointerCalculator ptr = new PointerCalculator((IntPtr)i);
-                    func.Invoke(ptr);
-                    return true;
-                }
+                callback(allFound);
+        }
+
+        private bool ScanInternal(IPattern pattern)
+        {
+            IntPtr result;
+            var (patternBytes, maskBytes) = pattern.GetNativePattern();
+            bool found = NativeModuleFuncs.ScanPatternWrapper(m_Module.Base, m_Module.End, patternBytes, patternBytes.Length, maskBytes, out result);
+
+            if (found)
+            {
+                LOG.INFO($"Found pattern [{pattern.Name}] : [{result:X}]");
+                //m_Patterns[pattern] = result.;
+                return true;
             }
-            LOG.WARNING($"Failed to find pattern [{pattern.Name}]");
             return false;
         }
+
+        //public IntPtr GetPatternResult(IPattern pattern)
+        //{
+        //    return m_Patterns.TryGetValue(pattern, out IntPtr result) ? result : IntPtr.Zero;
+        //}
     }
 }
