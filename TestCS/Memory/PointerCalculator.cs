@@ -52,11 +52,11 @@ namespace TestCS.Memory
         //    Marshal.WriteIntPtr(m_InternalPtr, value);
         //}
 
-        //public T GetComObject<T>() where T : SharpDX.ComObject
-        //{
-        //    IntPtr ptr = ReadIntPtr();
-        //    return SharpDX.ComObject.As<T>(ptr);
-        //}
+        public T GetComObject<T>() where T : SharpDX.ComObject
+        {
+            IntPtr ptr = Marshal.ReadIntPtr(m_InternalPtr);
+            return SharpDX.ComObject.As<T>(ptr);
+        }
 
         ////public T ReadUnmanaged<T>() where T : unmanaged
         ////{

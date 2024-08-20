@@ -5,7 +5,11 @@
 #include <nethost.h>
 #include <coreclr_delegates.h>
 #include <hostfxr.h>
+#include <objbase.h> // Add this for COM functions
+
 #pragma comment(lib, "user32.lib")
+#pragma comment(lib, "ole32.lib") // Add this for COM functions
+
 #define STR(s) L ## s
 #define CH(c) L ## c
 #define DIR_SEPARATOR L'\\'
@@ -38,7 +42,7 @@ hostfxr_close_fn close_fptr;
 bool load_hostfxr()
 {
     // Load hostfxr and get desired exports
-    HMODULE lib = LoadLibraryW(SOLUTION_DIR L"output\\hostfxr.dll");
+    HMODULE lib = LoadLibraryW(SOLUTION_DIR L"output2\\hostfxr.dll");
     if (lib == NULL)
     {
         LogMessage("Failed to load hostfxr.dll. Error code: " + std::to_string(GetLastError()));
@@ -63,16 +67,26 @@ bool load_hostfxr()
 
 bool load_and_run()
 {
+    // Initialize COM
+    HRESULT hr = CoInitializeEx(NULL, COINIT_APARTMENTTHREADED | COINIT_DISABLE_OLE1DDE);
+    if (FAILED(hr))
+    {
+        LogMessage("Failed to initialize COM. HRESULT: " + std::to_string(hr));
+        return false;
+    }
+    LogMessage("COM initialized successfully");
+
     // Load .NET Core
     if (!load_hostfxr())
     {
+        CoUninitialize();
         LogMessage("Failed to load hostfxr");
         return false;
     }
     LogMessage("hostfxr loaded successfully");
 
     // Get the path to the .NET Core runtime configuration file
-    const wchar_t* config_path = SOLUTION_DIR L"output\\TestCS.runtimeconfig.json";
+    const wchar_t* config_path = SOLUTION_DIR L"output2\\TestCS.runtimeconfig.json";
 
     // Load and initialize .NET Core
     void* load_assembly_and_get_function_pointer = nullptr;
@@ -100,7 +114,7 @@ bool load_and_run()
     LogMessage(".NET Core runtime initialized successfully");
 
     // Load managed assembly and get function pointer to a managed method
-    const char_t* dotnetlib_path = SOLUTION_DIR STR("output\\TestCS.dll");
+    const char_t* dotnetlib_path = SOLUTION_DIR STR("output2\\TestCS.dll");
     const char_t* type_name = STR("TestCS.Program, TestCS");
     const char_t* method_name = STR("Main");
     void* delegate = nullptr;
@@ -133,6 +147,7 @@ bool load_and_run()
     LogMessage("Managed function called successfully");
 
     close_fptr(cxt);
+    CoUninitialize();
     return true;
 }
 

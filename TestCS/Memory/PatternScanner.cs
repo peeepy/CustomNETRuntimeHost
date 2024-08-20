@@ -31,7 +31,6 @@ namespace TestCS.Memory
                 return;
             }
 
-            // Simulate async operation
                 bool allFound = true;
                 foreach (var pattern in m_Patterns.Keys)
                 {
@@ -54,15 +53,23 @@ namespace TestCS.Memory
             if (found)
             {
                 LOG.INFO($"Found pattern [{pattern.Name}] : [{result:X}]");
-                //m_Patterns[pattern] = result.;
+                // Create a PointerCalculator instance with the result
+                var pointerCalculator = new PointerCalculator(result);
+
+                // Call the PatternFunc associated with this pattern
+                if (m_Patterns.TryGetValue(pattern, out var patternFunc))
+                {
+                    patternFunc(pointerCalculator);
+                }
+
                 return true;
             }
             return false;
-        }
 
-        //public IntPtr GetPatternResult(IPattern pattern)
-        //{
-        //    return m_Patterns.TryGetValue(pattern, out IntPtr result) ? result : IntPtr.Zero;
-        //}
-    }
+        }
+            //public IntPtr GetPatternResult(IPattern pattern)
+            //{
+            //    return m_Patterns.TryGetValue(pattern, out IntPtr result) ? result : IntPtr.Zero;
+            //}
+        }
 }
