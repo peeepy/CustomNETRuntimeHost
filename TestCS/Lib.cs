@@ -5,6 +5,7 @@ using System.Text;
 //using Natives;
 using TestCS.Memory;
 using static TestCS.Memory.PointerData;
+using TestCS.Hooking;
 
 namespace TestCS
 {
@@ -23,12 +24,14 @@ namespace TestCS
             //TODO: Fix blocking of thread when this is initialising
             //LOG.INFO($"Am I using Vulkan? Result: {Pointers.Instance.IsVulkan}");
             //LOG.INFO($"Hwnd pointer: {Pointers.Instance.Hwnd
-            bool initComplete = false;
             Pointers.Init(success =>
             {
                 if (success)
                 {
-                    LOG.INFO("Patterns found");
+                    //LOG.INFO("Patterns found");
+                    Renderer.Init();
+                    //Hooking.Hooking.Init();
+                    LOG.INFO($"Am I using Vulkan? Result: {IsVulkan}");
                     ScriptManager.Instance.Init();
                     LOG.INFO("ScriptMgr initialised.");
                 }
@@ -37,7 +40,6 @@ namespace TestCS
                     LOG.ERROR("Patterns could not be found");
                     // Handle the failure case
                 }
-                initComplete = true;
             }); 
         }
 

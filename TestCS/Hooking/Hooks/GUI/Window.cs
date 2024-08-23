@@ -17,8 +17,8 @@ namespace TestCS.Hooking.Hooks.GUI
 
         public static IntPtr WndProc(IntPtr hwnd, uint umsg, IntPtr wparam, IntPtr lparam) // return type LRESULT, params HWND, WPARAM, LPARAM
         {
-            //if (g_Running)
-            //    Renderer::WndProc(hwnd, umsg, wparam, lparam);
+            LOG.INFO("Hooked WndProc");
+            //    Renderer.WndProc(hwnd, umsg, wparam, lparam);
 
             return BaseHook.Get<DetourHook<WndProcDelegate>>(WndProc).Original(hwnd, umsg, wparam, lparam);
         }

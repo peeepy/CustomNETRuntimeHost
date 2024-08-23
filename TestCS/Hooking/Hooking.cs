@@ -33,7 +33,7 @@ namespace TestCS.Hooking
 
         public static bool Init()
         {
-            AddHooks();
+           AddHooks();
             BaseHook.EnableAll();
             return true;
         }
