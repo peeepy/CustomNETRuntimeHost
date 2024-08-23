@@ -46,43 +46,6 @@ namespace TestCS
         private IntPtr _SwapchainWaitableObject;
         private ulong _FrameIndex;
 
-        // Vulkan
-        private static List<String> InstanceExtensions = ["VK_KHR_surface"];
-        private static List<String> ValidationLayers = ["VK_LAYER_KHRONOS_validation"];
-
-        [StructLayout(LayoutKind.Sequential)]
-        private struct ImGui_ImplVulkanH_Frame
-        {
-            public CommandPool CommandPool;       // VkCommandPool
-            public CommandBuffer CommandBuffer;     // VkCommandBuffer
-            public Silk.NET.Vulkan.Fence Fence;             // VkFence
-            public Image Backbuffer;        // VkImage
-            public ImageView BackbufferView;    // VkImageView
-            public Framebuffer Framebuffer;       // VkFramebuffer
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        private struct ImGui_ImplVulkanH_FrameSemaphores
-        {
-            Silk.NET.Vulkan.Semaphore ImageAcquiredSemaphore;
-            Silk.NET.Vulkan.Semaphore RenderCompleteSemaphore;
-        };
-        private Vk _vk = Vk.GetApi();
-        private Instance _Vkinstance;
-        private PhysicalDevice _VkphysicalDevice;
-        private Silk.NET.Vulkan.Device _VkDevice;
-        private Silk.NET.Vulkan.Device _VkFakeDevice;
-        private Extent2D _VkImageExtent;
-        private RenderPass _VkRenderPass;
-        private DescriptorPool _VkDescriptorPool;
-        private PipelineCache _VkPipelineCache;
-        private UInt32 _VkMinImageCount = 2;
-        private AllocationCallbacks _VkAllocator;
-        private UInt32 _VkQueueFamily;
-        private List<QueueFamilyProperties> _VKQueueFamilies;
-        private ImGui_ImplVulkanH_Frame[] _VkFrames = new ImGui_ImplVulkanH_Frame[8];
-        private ImGui_ImplVulkanH_FrameSemaphores[] _VkFrameSemaphores = new ImGui_ImplVulkanH_FrameSemaphores[8];
-
         private bool InitDX12()
         {
             LOG.INFO("Initialising DX12...");
@@ -392,6 +355,7 @@ namespace TestCS
             return true;
         }
 
+
         public static void DX12OnPresent()
         {
             Renderer.GetInstance().DX12OnPresentImpl();
@@ -403,187 +367,16 @@ namespace TestCS
 
         }
 
-        //private unsafe bool InitVulkan()
-        //{
-        //    InstanceCreateInfo instanceInfo = new InstanceCreateInfo
-        //    {
-        //        SType = StructureType.InstanceCreateInfo,
-        //        EnabledExtensionCount = (UInt32)InstanceExtensions.Count,
-        //        PpEnabledExtensionNames = (byte**)SilkMarshal.StringArrayToPtr(InstanceExtensions.ToArray())
-        //    };
-
-        //    try
-        //    {
-        //        if (_vk.CreateInstance(ref instanceInfo, ref _VkAllocator, out _Vkinstance) != Silk.NET.Vulkan.Result.Success)
-        //        {
-        //            LOG.WARNING("Vulkan Instance could not be created");
-        //        }
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        LOG.ERROR($"{e}");
-        //    }
-
-        //    //UInt32 GpuCount;
-
-        //    try
-        //    {
-        //        if (_vk.EnumeratePhysicalDevices(_Vkinstance, null, null) != Silk.NET.Vulkan.Result.Success)
-        //        {
-        //            LOG.WARNING("vkEnumeratePhysicalDevices failed");
-        //        }
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        LOG.ERROR($"{e}");
-        //    }
-
-        //    //select discrete gpu - if none is available use first device
-        //    var devices = _vk.GetPhysicalDevices(_Vkinstance);
-        //    foreach (var gpu in devices)
-        //    {
-        //        var properties = _vk.GetPhysicalDeviceProperties(gpu);
-        //        if (properties.DeviceType == PhysicalDeviceType.DiscreteGpu) _VkphysicalDevice = gpu;
-        //    }
-        //    if (_VkphysicalDevice.Handle == 0) _VkphysicalDevice = devices.First();
-        //    var deviceProps = _vk.GetPhysicalDeviceProperties(_VkphysicalDevice);
-        //    LOG.INFO($"Using GPU: {Silk.NET.Vulkan.SilkMarshal.PtrToString((nint)deviceProps.DeviceName)}");
-
-        //    var queueFamilyCount = 0u; /// uint32
-        //    _vk.GetPhysicalDeviceQueueFamilyProperties(_VkphysicalDevice, ref queueFamilyCount, null);
-        //    var queueFamilies = new QueueFamilyProperties[queueFamilyCount];
-        //    fixed (QueueFamilyProperties* pQueueFamilies = queueFamilies)
-        //        _vk.GetPhysicalDeviceQueueFamilyProperties(_VkphysicalDevice, ref queueFamilyCount, pQueueFamilies);
-
-        //    for (var i = queueFamilyCount; i < queueFamilies.Length; i++)
-        //    {
-        //        if (queueFamilies[i].QueueFlags.HasFlag(QueueFlags.GraphicsBit))
-        //        {
-        //            _VkQueueFamily = i;
-        //            break;
-        //        }
-        //    }
-
-        //    float QueuePriority = 1.0f;
-
-        //    var queueCreateInfo = new DeviceQueueCreateInfo
-        //    {
-        //        SType = StructureType.DeviceQueueCreateInfo,
-        //        QueueCount = 1,
-        //        QueueFamilyIndex = _VkQueueFamily,
-        //        PQueuePriorities = &QueuePriority
-        //    };
-
-        //    List<String> enabledDeviceExtensions = ["VK_KHR_swapchain"];
-        //    byte** DeviceExtension = (byte**)SilkMarshal.StringArrayToPtr(enabledDeviceExtensions.ToArray());
-
-        //    var deviceCreateInfo = new DeviceCreateInfo
-        //    {
-        //        SType = StructureType.DeviceCreateInfo,
-        //        QueueCreateInfoCount = (UInt32)1,
-        //        EnabledExtensionCount = 1,
-        //        PpEnabledExtensionNames = DeviceExtension
-        //    };
-
-        //    if (_vk.CreateDevice(_VkphysicalDevice, ref deviceCreateInfo, ref _VkAllocator, out _VkFakeDevice) != Result.Success)
-        //        throw new Exception("Could not create device");
-
-        //    Memory.PointerData.QueuePresentKHR = (IntPtr)_vk.GetDeviceProcAddr(_VkFakeDevice, "vkQueuePresentKHR");
-        //    Memory.PointerData.CreateSwapchainKHR = (IntPtr)_vk.GetDeviceProcAddr(_VkFakeDevice, "vkCreateSwapchainKHR");
-        //    Memory.PointerData.AcquireNextImageKHR = (IntPtr)_vk.GetDeviceProcAddr(_VkFakeDevice, "vkAcquireNextImageKHR");
-        //    Memory.PointerData.AcquireNextImage2KHR = (IntPtr)_vk.GetDeviceProcAddr(_VkFakeDevice, "vkAcquireNextImage2KHR");
-
-
-        //    _vk.DestroyDevice(_VkFakeDevice, ref _VkAllocator);
-
-        //    //ImGui.CreateContext();
-        //    //TODO: Export from Imgui and create P/Invoke wrapper
-        //    //ImGui_ImplWin32_Init(Memory.PointerData.Hwnd);
-
-        //    LOG.INFO("Vulkan renderer has initialised successfully.");
-        //    return true;
-        //}
-
-
-        //void VkCreateRenderTarget(Silk.NET.Vulkan.Device device, SwapchainKHR Swapchain)
-        //{
-        //    uint imageCount = 0; // is assigned value of num of images from below func
-
-        //    // TODO: find correct GetSwapchainImagesKHR func
-        //    //Silk.NET.Vulkan.Result result = _vk.GetSwapchainImagesKHR(device, Swapchain, ref imageCount, null);
-        //    //if (result != Silk.NET.Vulkan.Result.Success)
-        //    //{
-        //    //    LOG.WARNING($"vkGetSwapchainImagesKHR failed with result: [{result}]");
-        //    //    return;
-        //    //}
-
-        //    Image[] BackBuffers = new Image[8];
-        //    //result = _vk.GetSwapchainImagesKHR(device, Swapchain, ref imageCount, swapchainImages);
-        //    //if (result != Silk.NET.Vulkan.Result.Success)
-        //    //{
-        //    //    LOG.WARNING($"vkGetSwapchainImagesKHR 2 failed with result: [{result}]");
-        //    //    return;
-        //    //}
-
-        //    for (uint i = 0; i < imageCount; i++)
-        //    {
-        //        _VkFrames[i].Backbuffer = BackBuffers[i];
-
-        //        ImGui_ImplVulkanH_Frame fd = _VkFrames[i];
-        //        ImGui_ImplVulkanH_FrameSemaphores fsd = _VkFrameSemaphores[i];
-        //        {
-        //            CommandPoolCreateInfo info = new CommandPoolCreateInfo
-        //            {
-        //                SType = StructureType.CommandPoolCreateInfo,
-        //                Flags = CommandPoolCreateFlags.ResetCommandBufferBit,
-        //                QueueFamilyIndex = _VkQueueFamily
-        //            };
-
-        //            Silk.NET.Vulkan.Result result2 = _vk.CreateCommandPool(device, in info, in _VkAllocator, out fd.CommandPool);
-        //            if (result2 != Silk.NET.Vulkan.Result.Success)
-        //            {
-        //                LOG.WARNING($"vkCreateCommandPool failed with result: [{result2}]");
-        //                return;
-        //            }
-        //        }
-        //        {
-        //            CommandBufferAllocateInfo info = new CommandBufferAllocateInfo
-        //            {
-        //                SType = StructureType.CommandBufferAllocateInfo,
-        //                CommandPool = fd.CommandPool,
-        //                Level = CommandBufferLevel.Primary,
-        //                CommandBufferCount = 1
-        //            };
-
-        //            Silk.NET.Vulkan.Result result = _vk.AllocateCommandBuffers(device, in info, out fd.CommandBuffer);
-        //            if (result != Silk.NET.Vulkan.Result.Success)
-        //            {
-        //                LOG.WARNING($"vkAllocateCommandBuffers failed with result: [{result}]");
-        //                return;
-        //            }
-        //        }
-
-        //    }
-
-
-        //}
-        //static void VkSetScreenSize(Extent2D extent)
-        //{
-        //    GetInstance()._VkImageExtent = extent;
-        //}
-
         private bool InitImpl()
         {
             if (Memory.PointerData.IsVulkan)
             {
-                LOG.INFO("Using Vulkan");
+                LOG.ERROR("Sorry, this doesn't support Vulkan. Switch to DX12 if you can.");
                 return false;
             }
             else if (!Memory.PointerData.IsVulkan)
             {
                 LOG.WARNING("Using DX12. Clear shader cache if you are having issues.");
-                //LOG.INFO("Sleeping for 5s to avoid errors...");
-                //Thread.Sleep(5000);
                 return InitDX12();
             }
 
