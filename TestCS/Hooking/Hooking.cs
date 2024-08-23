@@ -35,6 +35,7 @@ namespace TestCS.Hooking
         {
            AddHooks();
             BaseHook.EnableAll();
+            LOG.INFO("Hooks enabled.");
             return true;
         }
 
