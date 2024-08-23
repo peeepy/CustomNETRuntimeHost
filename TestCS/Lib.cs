@@ -24,22 +24,7 @@ namespace TestCS
             //TODO: Fix blocking of thread when this is initialising
             //LOG.INFO($"Am I using Vulkan? Result: {Pointers.Instance.IsVulkan}");
             //LOG.INFO($"Hwnd pointer: {Pointers.Instance.Hwnd
-            Pointers.Init(success =>
-            {
-                if (success)
-                {
-                    //LOG.INFO("Patterns found");
-                    Renderer.Init();
-                    ////Hooking.Hooking.Init();
-                    //ScriptManager.Instance.Init();
-                    //LOG.INFO("ScriptMgr initialised.");
-                }
-                else
-                {
-                    LOG.ERROR("Patterns could not be found");
-                    // Handle the failure case
-                }
-            }); 
+            Pointers.Init(); 
         }
 
         //private static async Task InitializeEverythingAsync()

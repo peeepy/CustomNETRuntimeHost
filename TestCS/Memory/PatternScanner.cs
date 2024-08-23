@@ -23,12 +23,12 @@ namespace TestCS.Memory
             m_Patterns[pattern] = func;
         }
 
-        public void ScanAsync(Action<bool> callback)
+        public bool ScanAsync()
         {
             if (!m_Module.Valid())
             {
-                callback(false);
-                return;
+
+                return false;
             }
 
                 bool allFound = true;
@@ -41,7 +41,7 @@ namespace TestCS.Memory
                         LOG.ERROR($"Failed to find pattern [{pattern.Name}]");
                     }
                 }
-                callback(allFound);
+                return allFound;
         }
 
         private bool ScanInternal(IPattern pattern)

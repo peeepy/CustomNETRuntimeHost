@@ -177,14 +177,13 @@ public static class PointerData
         [return: MarshalAs(UnmanagedType.Bool)]
         private static extern bool UnhookWindowsHookEx(IntPtr hhk);
 
-        public static void Init(Action<bool> initCallback)
+        public static bool Init()
         {
             Module rdr2 = ModuleManager.Get("RDR2.exe");
             if (rdr2 == null)
             {
                 LOG.ERROR("Could not find RDR2.exe.");
-                initCallback(false);
-                return;
+                return false;
             }
 
             PatternScanner scanner = new PatternScanner(rdr2);
@@ -644,19 +643,29 @@ public static class PointerData
                 PointerData.CreatePoolItem = ptr.Add(1).Rip().AsIntPtr();
             });
 
-            scanner.ScanAsync(scanSuccess =>
+            if (scanner.ScanAsync())
             {
-                if (scanSuccess)
-                {
-                    LOG.INFO("Patterns scanned successfully.");
-                    initCallback(true);
-                }
-                else
-                {
-                    LOG.ERROR("Some patterns could not be found. Stopping here.");
-                    initCallback(false);
-                }
-            });
+                LOG.INFO("Patterns scanned successfully.");
+                
+            }
+            else
+            {
+                LOG.ERROR("Some patterns could not be found. Stopping here.");
+                return false;
+            }
+            //scanner.ScanAsync(scanSuccess =>
+            //{
+            //    if (scanSuccess)
+            //    {
+            //        LOG.INFO("Patterns scanned successfully.");
+            //        return true;
+            //    }
+            //    else
+            //    {
+            //        LOG.ERROR("Some patterns could not be found. Stopping here.");
+            //        return false;
+            //    }
+            //});
 
             // May need to change this
             // Ensure the delegate is not null
@@ -677,16 +686,16 @@ public static class PointerData
                 else
                 {
                     LOG.INFO("Unknown renderer type!");
-                    initCallback(false);
+                    return false;
                 }
             }
             else
             {
                 LOG.INFO("GetRendererInfo delegate is not initialized!");
-                initCallback(false);
+                return false;
             }
 
-            initCallback(true);
+            return true;
         }
     }
 }
