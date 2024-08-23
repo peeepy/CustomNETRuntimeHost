@@ -29,7 +29,7 @@ namespace TestCS
                 if (success)
                 {
                     //LOG.INFO("Patterns found");
-                    //Renderer.Init();
+                    Renderer.Init();
                     ////Hooking.Hooking.Init();
                     //ScriptManager.Instance.Init();
                     //LOG.INFO("ScriptMgr initialised.");

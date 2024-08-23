@@ -15,7 +15,7 @@
 #define DIR_SEPARATOR L'\\'
 
 using string_t = std::basic_string<char_t>;
-
+std::atomic<bool> g_threadRunning(false);
 std::ofstream logFile;
 
 void LogMessage(const std::string& message) {
@@ -61,7 +61,7 @@ bool load_hostfxr()
         return false;
     }
 
-    LogMessage("hostfxr.dll loaded successfully");
+    //LogMessage("hostfxr.dll loaded successfully");
     return true;
 }
 
@@ -74,7 +74,7 @@ bool load_and_run()
         LogMessage("Failed to initialize COM. HRESULT: " + std::to_string(hr));
         return false;
     }
-    LogMessage("COM initialized successfully");
+    //LogMessage("COM initialized successfully");
 
     // Load .NET Core
     if (!load_hostfxr())
@@ -83,7 +83,7 @@ bool load_and_run()
         LogMessage("Failed to load hostfxr");
         return false;
     }
-    LogMessage("hostfxr loaded successfully");
+    //LogMessage("hostfxr loaded successfully");
 
     // Get the path to the .NET Core runtime configuration file
     const wchar_t* config_path = SOLUTION_DIR L"output2\\TestCS.runtimeconfig.json";
@@ -111,7 +111,7 @@ bool load_and_run()
         return false;
     }
 
-    LogMessage(".NET Core runtime initialized successfully");
+    //LogMessage(".NET Core runtime initialized successfully");
 
     // Load managed assembly and get function pointer to a managed method
     const char_t* dotnetlib_path = SOLUTION_DIR STR("output2\\TestCS.dll");
@@ -119,9 +119,9 @@ bool load_and_run()
     const char_t* method_name = STR("Main");
     void* delegate = nullptr;
 
-    LogMessage("Attempting to load: " + to_string(dotnetlib_path));
-    LogMessage("Type name: " + to_string(type_name));
-    LogMessage("Method name: " + to_string(method_name));
+    //LogMessage("Attempting to load: " + to_string(dotnetlib_path));
+    //LogMessage("Type name: " + to_string(type_name));
+    //LogMessage("Method name: " + to_string(method_name));
 
     rc = ((load_assembly_and_get_function_pointer_fn)load_assembly_and_get_function_pointer)(
         dotnetlib_path,
@@ -139,18 +139,37 @@ bool load_and_run()
         return false;
     }
 
-    LogMessage("Assembly loaded and function pointer obtained successfully");
+    //LogMessage("Assembly loaded and function pointer obtained successfully");
 
     // Call managed function
     ((void(*)())delegate)();
 
-    LogMessage("Managed function called successfully");
+    //LogMessage("Managed function called successfully");
 
     close_fptr(cxt);
     CoUninitialize();
     return true;
 }
 
+DWORD WINAPI ManagedCodeThread(LPVOID lpParam) {
+    try {
+        if (load_and_run()) {
+            LogMessage("Managed code executed successfully");
+        }
+        else {
+            LogMessage("Failed to execute managed code");
+        }
+    }
+    catch (const std::exception& e) {
+        LogMessage("Exception occurred: " + std::string(e.what()));
+    }
+    catch (...) {
+        LogMessage("Unknown exception occurred");
+    }
+
+    g_threadRunning = false;
+    return 0;
+}
 
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserved) {
     switch (ul_reason_for_call) {
@@ -158,31 +177,22 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
         AllocConsole();
         FILE* f;
         freopen_s(&f, "CONOUT$", "w", stdout);
-
         LogMessage("DLL_PROCESS_ATTACH reached");
 
-        // Start adding your .NET initialization here
-        try {
-
-            if (load_and_run()) {
-                LogMessage("Managed code executed successfully");
-            }
-            else {
-                LogMessage("Failed to execute managed code");
-            }
-            break;
-
-        }
-        catch (const std::exception& e) {
-            LogMessage("Exception occurred: " + std::string(e.what()));
-        }
-        catch (...) {
-            LogMessage("Unknown exception occurred");
-        }
+        // Create a new thread to run the managed code
+        g_threadRunning = true;
+        CreateThread(NULL, 0, ManagedCodeThread, NULL, 0, NULL);
         break;
 
     case DLL_PROCESS_DETACH:
         LogMessage("DLL_PROCESS_DETACH reached");
+
+        // Wait for the thread to finish (with a timeout)
+        DWORD startTime = GetTickCount64();
+        while (g_threadRunning && (GetTickCount64() - startTime < 5000)) {
+            Sleep(100);
+        }
+
         if (logFile.is_open()) {
             logFile.close();
         }
@@ -192,4 +202,4 @@ BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserv
     return TRUE;
 }
 
-extern "C" __declspec(dllexport) void DummyFunction() { }
+//extern "C" __declspec(dllexport) void DummyFunction() { }

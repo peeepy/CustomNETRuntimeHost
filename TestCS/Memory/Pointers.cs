@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using SharpDX.DXGI;
 using Silk.NET.Vulkan;
 using TestCS.Utils;
-using Vortice.Vulkan;
 using static TestCS.Memory.Functions;
 
 namespace TestCS.Memory
