@@ -1,34 +1,35 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Runtime.InteropServices;
 
-namespace TestCS.Utils
+public enum ERenderingType : byte
 {
-    public enum ERenderingType : uint
+    DX12 = 1,
+    Unk,
+    Vulkan
+}
+
+[StructLayout(LayoutKind.Sequential)]
+public class RenderingInfo
+{
+    public IntPtr VTable; // Virtual table pointer
+    public byte unk_0008; // 0x0008
+    public ERenderingType RenderingType; // 0x0009
+
+    public bool IsRenderingType(ERenderingType type)
     {
-        DX12 = 1,
-	    Unk,
-	    Vulkan
-    };
+        return RenderingType == type;
+    }
 
-    public class RenderingInfo
+    public void SetRenderingType(ERenderingType type)
     {
-
-	    public uint unk_0008; //0x0008
-        ERenderingType _RenderingType; //0x0009
-
-        public bool is_rendering_type(ERenderingType type)
+        if (!IsRenderingType(type))
         {
-            return _RenderingType == type;
+            RenderingType = type;
         }
-        public void set_rendering_type(ERenderingType type)
-        {
-            if (!is_rendering_type(type))
-            {
-                _RenderingType = type;
-            }
-        }
-    };
+    }
+
+    public static RenderingInfo FromIntPtr(IntPtr ptr)
+    {
+        return (RenderingInfo)Marshal.PtrToStructure(ptr, typeof(RenderingInfo));
+    }
 }

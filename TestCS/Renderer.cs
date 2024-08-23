@@ -30,7 +30,7 @@ namespace TestCS
         }
 
         // DX12
-        private List<FrameContext> _FrameContext;
+        private List<FrameContext> _FrameContext = new List<FrameContext>();
         private SwapChainDescription _SwapChainDesc;
         private SwapChain1 _GameSwapChain;
         private SwapChain3 _SwapChain;
@@ -85,32 +85,54 @@ namespace TestCS
 
         private bool InitDX12()
         {
+            LOG.INFO("Initialising DX12...");
+
             if (Memory.PointerData.SwapChain == IntPtr.Zero)
             {
-                LOG.WARNING("SwapChain pointer is invalid!");
+                LOG.ERROR("SwapChain pointer is invalid!");
                 return false;
             }
             if (Memory.PointerData.CommandQueue == IntPtr.Zero)
             {
-                LOG.WARNING("CommandQueue pointer is invalid!");
+                LOG.ERROR("CommandQueue pointer is invalid!");
                 return false;
             }
 
             //LOG.INFO($"SwapChain pointer-to-pointer value: 0x{Memory.PointerData.SwapChain.ToInt64():X}");
-            IntPtr swapChainPtr = Marshal.ReadIntPtr(Memory.PointerData.SwapChain);
-            //LOG.INFO($"Dereferenced SwapChain pointer value: 0x{swapChainPtr.ToInt64():X}");
+            IntPtr swapChainPtr = IntPtr.Zero;
+            try
+            {
+                swapChainPtr = Marshal.ReadIntPtr(Memory.PointerData.SwapChain);
+                //LOG.INFO($"Dereferenced SwapChain pointer value: 0x{swapChainPtr.ToInt64():X}");
+            }
+            catch (Exception ex)
+            {
+                LOG.ERROR($"Failed to dereference SwapChain pointer: {ex.Message}");
+                return false;
+            }
+
             if (swapChainPtr == IntPtr.Zero)
             {
-                LOG.WARNING("Dereferenced SwapChain pointer is null!");
+                LOG.ERROR("Dereferenced SwapChain pointer is null!");
                 return false;
             }
 
             //LOG.INFO($"CommandQueue pointer-to-pointer value: 0x{Memory.PointerData.CommandQueue.ToInt64():X}");
-            IntPtr commandQueuePtr = Marshal.ReadIntPtr(Memory.PointerData.CommandQueue);
-            //LOG.INFO($"Dereferenced CommandQueue pointer value: 0x{commandQueuePtr.ToInt64():X}");
+            IntPtr commandQueuePtr = IntPtr.Zero;
+            try
+            {
+                commandQueuePtr = Marshal.ReadIntPtr(Memory.PointerData.CommandQueue);
+                //LOG.INFO($"Dereferenced CommandQueue pointer value: 0x{commandQueuePtr.ToInt64():X}");
+            }
+            catch (Exception ex)
+            {
+                LOG.ERROR($"Failed to dereference CommandQueue pointer: {ex.Message}");
+                return false;
+            }
+
             if (commandQueuePtr == IntPtr.Zero)
             {
-                LOG.WARNING("Dereferenced CommandQueue pointer is null!");
+                LOG.ERROR("Dereferenced CommandQueue pointer is null!");
                 return false;
             }
 
@@ -135,13 +157,13 @@ namespace TestCS
                 _SwapChain = _GameSwapChain.QueryInterface<SwapChain3>();
                 if (_SwapChain == null)
                 {
-                    LOG.WARNING("Failed to query SwapChain1 interface, falling back to base SwapChain");
-                    //_SwapChain = _GameSwapChain
+                    LOG.WARNING("Failed to query SwapChain3 interface, falling back to base SwapChain");
+                    //_SwapChain = _GameSwapChain;
                 }
-                //else
-                //{
-                //    LOG.INFO("Successfully queried SwapChain3 interface.");
-                //}
+                else
+                {
+                    //LOG.INFO("Successfully queried SwapChain3 interface.");
+                }
             }
             catch (Exception ex)
             {
@@ -152,17 +174,15 @@ namespace TestCS
             try
             {
                 // Get the device from the SwapChain
-                using (var temp = _SwapChain.GetDevice<SharpDX.Direct3D12.Device>())
-                {
-                    _Device = temp;
-                }
+                var temp = _SwapChain.GetDevice<SharpDX.Direct3D12.Device>();
+                _Device = temp;
 
                 if (_Device == null)
                 {
                     LOG.ERROR("Failed to get D3D12 Device: Device is null");
                     return false;
                 }
-                LOG.INFO("Successfully created D3D12 device.");
+                //LOG.INFO("Successfully created D3D12 device.");
             }
             catch (SharpDXException ex)
             {
@@ -170,130 +190,178 @@ namespace TestCS
                 return false;
             }
 
+            try
+            {
+                // Get the swap chain description
+                _SwapChainDesc = _SwapChain.Description;
+                //LOG.INFO("SwapChain Description fetched successfully.");
+            }
+            catch (Exception ex)
+            {
+                LOG.ERROR($"Failed to get SwapChain Description: {ex.Message}");
+                return false;
+            }
 
-            // Get the swap chain description
-            _SwapChainDesc = _SwapChain.Description;
-            LOG.INFO($"SwapChain Description fetched successfully.");
+            if (_Device == null || _Device.NativePointer == IntPtr.Zero)
+            {
+                LOG.ERROR("Device is null or invalid before creating Fence");
+                return false;
+            }
 
             try
             {
                 // Create the fence using SharpDX
                 _Fence = _Device.CreateFence(0, FenceFlags.None);
-                LOG.INFO($"Successfully created Fence.");
-            }
-            catch (SharpDXException ex)
-            {
-                LOG.ERROR($"Failed to create Fence with result: [{ex.ResultCode}] - {ex.ResultCode.ToString()}");
-                return false;
-            }
-
-            // Create the fence event using AutoResetEvent
-            try
-            {
-                _FenceEvent = new AutoResetEvent(false);
-                LOG.INFO("Created Fence event.");
-                if (_FenceEvent == null)
+                if (_Fence == null)
                 {
-                    LOG.ERROR("Failed to create Fence Event!");
+                    LOG.ERROR("Failed to create Fence: Fence is null");
                     return false;
                 }
-            }
-            catch(SharpDXException ex)
-            {
-                LOG.ERROR($"Failed to create Fence event with result: [{ex.ResultCode}] - {ex.ResultCode.ToString()}");
-                return false;
-            }
-
-            // NOTE: May need to fill in the framecontext struct
-            // Add instances to the list based on the number of swap chain buffers
-            try
-            {
-                for (int i = 0; i < _SwapChainDesc.BufferCount; i++)
-                {
-                    _FrameContext.Add(new FrameContext { });
-                }
-            }
-            catch(Exception ex)
-            {
-                LOG.ERROR($"Failed to create add new FrameContexts with result: {ex}");
-                return false;
-            }
-            
-
-            DescriptorHeapDescription DescriptorDesc = new DescriptorHeapDescription()
-            {
-                DescriptorCount = _SwapChainDesc.BufferCount,
-                Flags = DescriptorHeapFlags.ShaderVisible,
-                Type = DescriptorHeapType.ConstantBufferViewShaderResourceViewUnorderedAccessView
-            };
-            try
-            {
-                _DescriptorHeap = _Device.CreateDescriptorHeap(DescriptorDesc);
-                LOG.INFO("Successfully created Descriptor Heap.");
+                //LOG.INFO("Successfully created Fence.");
             }
             catch (SharpDXException ex)
             {
-                LOG.WARNING($"Failed to create Descriptor Heap with result: [{ex.ResultCode}] - {ex.ResultCode.ToString()}]");
+                LOG.ERROR($"Failed to create Fence with result: [{ex.ResultCode}] - {ex.Message}");
                 return false;
             }
 
+            try
+            {
+                // Create the fence event using AutoResetEvent
+                _FenceEvent = new AutoResetEvent(false);
+                if (_FenceEvent == null)
+                {
+                    LOG.ERROR("Failed to create Fence Event: FenceEvent is null");
+                    return false;
+                }
+                //LOG.INFO("Created Fence event.");
+            }
+            catch (Exception ex)
+            {
+                LOG.ERROR($"Failed to create Fence event: {ex.Message}");
+                return false;
+            }
+
+            try
+            {
+                //LOG.INFO($"SwapChainDesc.BufferCount: {_SwapChainDesc.BufferCount}");
+                //LOG.INFO($"_FrameContext is null: {_FrameContext == null}");
+
+                if (_FrameContext == null)
+                {
+                    _FrameContext = new List<FrameContext>();
+                    LOG.INFO("Initialized _FrameContext as it was null");
+                }
+
+                // Add instances to the list based on the number of swap chain buffers
+                for (int i = 0; i < _SwapChainDesc.BufferCount; i++)
+                {
+                    _FrameContext.Add(new FrameContext());
+                }
+                //LOG.INFO($"Added {_SwapChainDesc.BufferCount} FrameContext instances.");
+            }
+            catch (Exception ex)
+            {
+                LOG.ERROR($"Failed to add new FrameContexts: {ex.Message}");
+                LOG.ERROR($"Exception type: {ex.GetType().Name}");
+                LOG.ERROR($"Stack trace: {ex.StackTrace}");
+                return false;
+            }
+
+            try
+            {
+                DescriptorHeapDescription DescriptorDesc = new DescriptorHeapDescription()
+                {
+                    DescriptorCount = _SwapChainDesc.BufferCount,
+                    Flags = DescriptorHeapFlags.ShaderVisible,
+                    Type = DescriptorHeapType.ConstantBufferViewShaderResourceViewUnorderedAccessView
+                };
+                _DescriptorHeap = _Device.CreateDescriptorHeap(DescriptorDesc);
+                if (_DescriptorHeap == null)
+                {
+                    LOG.ERROR("Failed to create Descriptor Heap: DescriptorHeap is null");
+                    return false;
+                }
+                //LOG.INFO("Successfully created Descriptor Heap.");
+            }
+            catch (SharpDXException ex)
+            {
+                LOG.ERROR($"Failed to create Descriptor Heap with result: [{ex.ResultCode}] - {ex.Message}");
+                return false;
+            }
 
             try
             {
                 _CommandAllocator = _Device.CreateCommandAllocator(CommandListType.Direct);
-                LOG.INFO("Successfully created CommandAllocator");
+                if (_CommandAllocator == null)
+                {
+                    LOG.ERROR("Failed to create Command Allocator: CommandAllocator is null");
+                    return false;
+                }
+                //LOG.INFO("Successfully created CommandAllocator");
             }
             catch (SharpDXException ex)
             {
-                LOG.WARNING($"Failed to create Command Allocator with result: [{ex.ResultCode}] - {ex.ResultCode.ToString()}");
+                LOG.ERROR($"Failed to create Command Allocator with result: [{ex.ResultCode}] - {ex.Message}");
                 return false;
             }
 
-            for (int i = 0; i < _SwapChainDesc.BufferCount; i++)
-            {
-                _FrameContext[i].CommandAllocator = _CommandAllocator;
-            }
-
-
-            // Create the command list.
             try
             {
+                for (int i = 0; i < _SwapChainDesc.BufferCount; i++)
+                {
+                    _FrameContext[i].CommandAllocator = _CommandAllocator;
+                }
+                //LOG.INFO("Assigned CommandAllocator to all FrameContext instances.");
+            }
+            catch (Exception ex)
+            {
+                LOG.ERROR($"Failed to assign CommandAllocator to FrameContext instances: {ex.Message}");
+                return false;
+            }
+
+            try
+            {
+                // Create the command list.
                 _CommandList = _Device.CreateCommandList(CommandListType.Direct, _CommandAllocator, null);
-                LOG.INFO("Successfully created CommandList");
-            }
-            catch (SharpDXException ex)
-            {
-                LOG.ERROR($"Failed to create Command List with result: [{ex.ResultCode}] - {ex.ResultCode.ToString()}");
-                return false;
-            }
+                if (_CommandList == null)
+                {
+                    LOG.ERROR("Failed to create Command List: CommandList is null");
+                    return false;
+                }
+                //LOG.INFO("Successfully created CommandList");
 
-            try
-            {
                 _CommandList.Close();
+                //LOG.INFO("Successfully closed CommandList");
             }
             catch (SharpDXException ex)
             {
-                LOG.ERROR($"Failed to finalize the creation of Command List with result: [{ex.ResultCode}] - {ex.ResultCode.ToString()}");
+                LOG.ERROR($"Failed to create or close Command List with result: [{ex.ResultCode}] - {ex.Message}");
                 return false;
             }
 
-
-            DescriptorHeapDescription DescriptorBackbufferDesc = new DescriptorHeapDescription()
-            {
-                DescriptorCount = _SwapChainDesc.BufferCount,
-                Flags = DescriptorHeapFlags.None,
-                Type = DescriptorHeapType.RenderTargetView
-            };
             try
             {
+                DescriptorHeapDescription DescriptorBackbufferDesc = new DescriptorHeapDescription()
+                {
+                    DescriptorCount = _SwapChainDesc.BufferCount,
+                    Flags = DescriptorHeapFlags.None,
+                    Type = DescriptorHeapType.RenderTargetView
+                };
                 _BackbufferDescriptorHeap = _Device.CreateDescriptorHeap(DescriptorBackbufferDesc);
+                if (_BackbufferDescriptorHeap == null)
+                {
+                    LOG.ERROR("Failed to create Backbuffer Descriptor Heap: BackbufferDescriptorHeap is null");
+                    return false;
+                }
+                //LOG.INFO("Successfully created Backbuffer Descriptor Heap");
             }
             catch (SharpDXException ex)
             {
-                LOG.WARNING($"Failed to create Backbuffer Descriptor Heap with result: [{ex.ResultCode}] - {ex.ResultCode.ToString()}]");
+                LOG.ERROR($"Failed to create Backbuffer Descriptor Heap with result: [{ex.ResultCode}] - {ex.Message}");
                 return false;
             }
-            
+
             try
             {
                 int RTVDescriptorSize = _Device.GetDescriptorHandleIncrementSize(DescriptorHeapType.RenderTargetView);
@@ -303,30 +371,24 @@ namespace TestCS
                     SharpDX.Direct3D12.Resource BackBuffer;
                     _FrameContext[i].Descriptor = RTVHandle;
                     BackBuffer = _SwapChain.GetBackBuffer<SharpDX.Direct3D12.Resource>(i);
+                    if (BackBuffer == null)
+                    {
+                        LOG.ERROR($"Failed to get BackBuffer for index {i}: BackBuffer is null");
+                        return false;
+                    }
                     _Device.CreateRenderTargetView(BackBuffer, null, RTVHandle);
                     _FrameContext[i].Resource = BackBuffer;
-                    RTVHandle.Ptr = RTVDescriptorSize;
+                    RTVHandle.Ptr += RTVDescriptorSize;
                 }
+                //LOG.INFO("Successfully created RenderTargetViews for all back buffers");
             }
             catch (Exception ex)
             {
-                LOG.WARNING("Failed to create RTVHandle");
+                LOG.ERROR($"Failed to create RTVHandle or RenderTargetViews: {ex.Message}");
                 return false;
             }
-            
 
-            //ImGui.CreateContext();
-            //TODO: Actually export these from imgui and create P/Invoke wrappers
-            //Natives.ImGui.ImGui_ImplWin32_Init(Memory.PointerData.Hwnd)
-            //Natives.ImGui.ImGui_ImplDX12_Init(_Device,
-            //_SwapChainDesc.BufferCount,
-            //DXGI_FORMAT_R8G8B8A8_UNORM // DXGI_FORMAT 28?,
-            //_DescriptorHeap,
-            //_DescriptorHeap.CPUDescriptorHandleForHeapStart, 
-            //_DescriptorHeap.GPUDescriptorHandleForHeapStart);
-
-            //ImGui.StyleColorsDark();
-            LOG.INFO("DirectX 12 renderer has finished initializing.");
+            LOG.INFO("DirectX12 has initialised successfully.");
             return true;
         }
 
@@ -385,7 +447,7 @@ namespace TestCS
         //    }
         //    if (_VkphysicalDevice.Handle == 0) _VkphysicalDevice = devices.First();
         //    var deviceProps = _vk.GetPhysicalDeviceProperties(_VkphysicalDevice);
-        //    LOG.INFO($"Using GPU: {SilkMarshal.PtrToString((nint)deviceProps.DeviceName)}");
+        //    LOG.INFO($"Using GPU: {Silk.NET.Vulkan.SilkMarshal.PtrToString((nint)deviceProps.DeviceName)}");
 
         //    var queueFamilyCount = 0u; /// uint32
         //    _vk.GetPhysicalDeviceQueueFamilyProperties(_VkphysicalDevice, ref queueFamilyCount, null);
@@ -434,7 +496,7 @@ namespace TestCS
 
         //    _vk.DestroyDevice(_VkFakeDevice, ref _VkAllocator);
 
-        //    ImGui.CreateContext();
+        //    //ImGui.CreateContext();
         //    //TODO: Export from Imgui and create P/Invoke wrapper
         //    //ImGui_ImplWin32_Init(Memory.PointerData.Hwnd);
 
@@ -519,7 +581,7 @@ namespace TestCS
             }
             else if (!Memory.PointerData.IsVulkan)
             {
-                LOG.INFO("Using DX12. Clear shader cache if you are having issues.");
+                LOG.WARNING("Using DX12. Clear shader cache if you are having issues.");
                 //LOG.INFO("Sleeping for 5s to avoid errors...");
                 //Thread.Sleep(5000);
                 return InitDX12();
