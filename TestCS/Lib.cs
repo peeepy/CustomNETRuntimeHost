@@ -21,8 +21,13 @@ namespace TestCS
             ModuleManager.Instance.LoadModules();
             LOG.INFO("Loaded modules.");
             LOG.INFO("Scanning for pointers...");
-            Pointers.Init();
-            Renderer.Init();
+            if (!Pointers.Init())
+            {
+                return;
+            }
+            if (!Renderer.Init()) {
+                return;
+            }
             Hooking.Hooking.Init();
             ScriptManager.Instance.Init();
             LOG.INFO("Script manager initialised.");

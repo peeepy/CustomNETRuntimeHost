@@ -7,6 +7,7 @@ using SharpDX;
 using SharpDX.DXGI;
 using TestCS.Hooking.Hooks.GUI;
 using TestCS.Memory;
+using EasyHook;
 
 namespace TestCS.Hooking
 {
@@ -14,20 +15,24 @@ namespace TestCS.Hooking
     {
         private static void AddHooks() 
         {
-            BaseHook.Add(WindowHook.WndProc, new DetourHook<WindowHook.WndProcDelegate>("WndProc", PointerData.WndProc, WindowHook.WndProc));
+            try
+            {
+                BaseHook.Add(WindowHook.WndProc, new DetourHook<WindowHook.WndProcDelegate>("WndProc", PointerData.WndProc, WindowHook.WndProc));
+                LOG.INFO("Added WndProc hook");
+            }
+            catch (Exception ex) {
+                LOG.ERROR($"Error adding WndProc hook: {ex}");
+                    }
 
             // TODO: Finish renderer...
-            if (!PointerData.IsVulkan)
-            {
-                BaseHook.Add(SwapChainHook.Present, new DetourHook<SwapChainHook.PresentDelegate>("SwapChain::Present", GetVF(PointerData.SwapChain, SwapChainHook.VMTPresentIdx), SwapChainHook.Present));
-                BaseHook.Add(SwapChainHook.ResizeBuffers, new DetourHook<SwapChainHook.ResizeBuffersDelegate>("SwapChain::ResizeBuffers", GetVF(PointerData.SwapChain, SwapChainHook.VMTResizeBuffersIdx), SwapChainHook.ResizeBuffers));
-            }
+            //if (!PointerData.IsVulkan)
+            //{
+            //    BaseHook.Add(SwapChainHook.Present, new DetourHook<SwapChainHook.PresentDelegate>("SwapChain::Present", GetVF(PointerData.SwapChain, SwapChainHook.VMTPresentIdx), SwapChainHook.Present));
+            //    BaseHook.Add(SwapChainHook.ResizeBuffers, new DetourHook<SwapChainHook.ResizeBuffersDelegate>("SwapChain::ResizeBuffers", GetVF(PointerData.SwapChain, SwapChainHook.VMTResizeBuffersIdx), SwapChainHook.ResizeBuffers));
+            //}
 
 
             
-
-            //SwapChainHook.PresentHook = new DetourHook<SwapChainHook.PresentDelegate>("SwapChain::Present", GetVF(PointerData.SwapChain, SwapChainHook.VMTPresentIdx), SwapChainHook.Present);
-            //SwapChainHook.ResizeBuffersHook = new DetourHook<SwapChainHook.ResizeBuffersDelegate>("SwapChain::ResizeBuffers", GetVF(PointerData.SwapChain, SwapChainHook.VMTResizeBuffersIdx), SwapChainHook.ResizeBuffers);
         }
 
 

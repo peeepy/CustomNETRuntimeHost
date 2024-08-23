@@ -9,7 +9,7 @@
     ".NETCoreApp,Version=v8.0/win-x64": {
       "TestCS/1.0.0": {
         "dependencies": {
-          "EasyHook": "2.7.7097",
+          "EasyHook": "2.7.6789",
           "ImGui.NET": "1.91.0.1",
           "SharpDX": "4.2.0",
           "SharpDX.DXGI": "4.2.0",
@@ -742,11 +742,11 @@
           }
         }
       },
-      "EasyHook/2.7.7097": {
+      "EasyHook/2.7.6789": {
         "runtime": {
           "lib/net40/EasyHook.dll": {
-            "assemblyVersion": "2.7.7097.0",
-            "fileVersion": "2.7.7097.0"
+            "assemblyVersion": "2.7.6789.0",
+            "fileVersion": "2.7.6789.0"
           }
         }
       },
@@ -2135,12 +2135,12 @@
       "serviceable": false,
       "sha512": ""
     },
-    "EasyHook/2.7.7097": {
+    "EasyHook/2.7.6789": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-DCx3T5I1D5zo6BIjiEjE/1Wlsm0UPw9Z0DlQ9Wz12YSBohQMD4vlt03OPXfb5+MQ2WeieqVKYXvwNhnT/E+fbg==",
-      "path": "easyhook/2.7.7097",
-      "hashPath": "easyhook.2.7.7097.nupkg.sha512"
+      "sha512": "sha512-nyNReeHCLo0GUB7f3ZMCwf2dccr/u5e4fsoaga7M93R1s96DWSS2zYwxfBOBY5/3edBZ6LWcVX9Jp7/zKVwZqw==",
+      "path": "easyhook/2.7.6789",
+      "hashPath": "easyhook.2.7.6789.nupkg.sha512"
     },
     "ImGui.NET/1.91.0.1": {
       "type": "package",

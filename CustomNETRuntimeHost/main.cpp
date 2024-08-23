@@ -153,10 +153,7 @@ bool load_and_run()
 
 DWORD WINAPI ManagedCodeThread(LPVOID lpParam) {
     try {
-        if (load_and_run()) {
-            LogMessage("Managed code executed successfully");
-        }
-        else {
+        if (!load_and_run()) {
             LogMessage("Failed to execute managed code");
         }
     }
