@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using SharpDX.DXGI;
-using SharpGen.Runtime;
 using Silk.NET.Vulkan;
 using TestCS.Utils;
 using Vortice.Vulkan;

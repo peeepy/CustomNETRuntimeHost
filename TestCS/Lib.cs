@@ -29,11 +29,10 @@ namespace TestCS
                 if (success)
                 {
                     //LOG.INFO("Patterns found");
-                    Renderer.Init();
-                    //Hooking.Hooking.Init();
-                    LOG.INFO($"Am I using Vulkan? Result: {IsVulkan}");
-                    ScriptManager.Instance.Init();
-                    LOG.INFO("ScriptMgr initialised.");
+                    //Renderer.Init();
+                    ////Hooking.Hooking.Init();
+                    //ScriptManager.Instance.Init();
+                    //LOG.INFO("ScriptMgr initialised.");
                 }
                 else
                 {

@@ -17,9 +17,6 @@
     <PackageReference Include="SharpDX.DirectManipulation" Version="4.2.0" />
     <PackageReference Include="SharpDX.DXGI" Version="4.2.0" />
     <PackageReference Include="Silk.NET.Vulkan.Extensions.KHR" Version="2.21.0" />
-    <PackageReference Include="Vortice.Direct3D12" Version="3.5.0" />
-    <PackageReference Include="Vortice.DirectX" Version="3.5.0" />
-    <PackageReference Include="Vortice.DXGI" Version="3.5.0" />
     <PackageReference Include="Vortice.Vulkan" Version="1.9.4" />
     <PackageReference Include="Vortice.Win32" Version="2.2.4" />
   </ItemGroup>
