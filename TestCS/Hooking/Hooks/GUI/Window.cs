@@ -17,38 +17,41 @@ namespace TestCS.Hooking.Hooks.GUI
 
         public static IntPtr WndProc(IntPtr hwnd, uint uMsg, IntPtr wParam, IntPtr lParam)
         {
-            switch (uMsg)
+            //switch (uMsg)
+            //{
+            //    //case 0x0100: // WM_KEYDOWN
+            //    //    LOG.INFO($"Key pressed: {(Keys)wParam}");
+            //    //    break;
+            //    case 0x0101: // WM_KEYUP
+            //        LOG.INFO($"Key released: {(Keys)wParam}");
+            //        break;
+            //    case 0x0200: // WM_MOUSEMOVE
+            //        int x = (short)((uint)lParam & 0xFFFF);
+            //        int y = (short)(((uint)lParam >> 16) & 0xFFFF);
+            //        LOG.INFO($"Mouse moved to: ({x}, {y})");
+            //        break;
+            //    case 0x0201: // WM_LBUTTONDOWN
+            //        LOG.INFO("Left mouse button pressed");
+            //        break;
+            //    case 0x0202: // WM_LBUTTONUP
+            //        LOG.INFO("Left mouse button released");
+            //        break;
+            //    case 0x0204: // WM_RBUTTONDOWN
+            //        LOG.INFO("Right mouse button pressed");
+            //        break;
+            //    case 0x0205: // WM_RBUTTONUP
+            //        LOG.INFO("Right mouse button released");
+            //        break;
+            //    default:
+            //        // Uncomment the following line to log all other messages
+            //         //LOG.INFO($"Other message received: 0x{uMsg:X4}");
+            //        break;
+            //}
+            if (g_IsRunning)
             {
-                //case 0x0100: // WM_KEYDOWN
-                //    LOG.INFO($"Key pressed: {(Keys)wParam}");
-                //    break;
-                case 0x0101: // WM_KEYUP
-                    LOG.INFO($"Key released: {(Keys)wParam}");
-                    break;
-                case 0x0200: // WM_MOUSEMOVE
-                    int x = (short)((uint)lParam & 0xFFFF);
-                    int y = (short)(((uint)lParam >> 16) & 0xFFFF);
-                    LOG.INFO($"Mouse moved to: ({x}, {y})");
-                    break;
-                case 0x0201: // WM_LBUTTONDOWN
-                    LOG.INFO("Left mouse button pressed");
-                    break;
-                case 0x0202: // WM_LBUTTONUP
-                    LOG.INFO("Left mouse button released");
-                    break;
-                case 0x0204: // WM_RBUTTONDOWN
-                    LOG.INFO("Right mouse button pressed");
-                    break;
-                case 0x0205: // WM_RBUTTONUP
-                    LOG.INFO("Right mouse button released");
-                    break;
-                default:
-                    // Uncomment the following line to log all other messages
-                     //LOG.INFO($"Other message received: 0x{uMsg:X4}");
-                    break;
+                Renderer.WndProc(hwnd, uMsg, wParam, lParam);
             }
 
-            // Call the original WndProc
             return BaseHook.Get<DetourHook<WndProcDelegate>>(WndProc).Original(hwnd, uMsg, wParam, lParam);
         }
     }

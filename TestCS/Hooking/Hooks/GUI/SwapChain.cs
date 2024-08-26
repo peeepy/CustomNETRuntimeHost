@@ -24,16 +24,23 @@ namespace TestCS.Hooking.Hooks.GUI
 
             public static Result Present(IntPtr swapChain, uint syncInterval, uint flags)
             {
-            // TODO: Implement these variables and method in Renderer. g_IsRunning is global
-            //Renderer.DX12OnPresent();
-            LOG.INFO("Hooked DX12 SwapChain Present");
+                if (g_IsRunning && !Renderer.IsResizing())
+                {
+                    Renderer.DX12OnPresent();
+                }
 
-            return BaseHook.Get<DetourHook<PresentDelegate>>(Present).Original(swapChain, syncInterval, flags);
+                return BaseHook.Get<DetourHook<PresentDelegate>>(Present).Original(swapChain, syncInterval, flags);
             }
 
             public static Result ResizeBuffers(IntPtr swapChain, uint bufferCount, uint width, uint height, DXGI_FORMAT newFormat, uint swapChainFlags)
             {
-            LOG.INFO("ResizeBuffers Swapchain Hooked");
+                if (g_IsRunning)
+            {
+                Renderer.GetInstance().DX12PreResize();
+                var result = BaseHook.Get<DetourHook<ResizeBuffersDelegate>>(ResizeBuffers).Original(swapChain, bufferCount, width, height, newFormat, swapChainFlags);
+                Renderer.GetInstance().DX12PostResize();
+                return result;
+            }
                 return BaseHook.Get<DetourHook<ResizeBuffersDelegate>>(ResizeBuffers).Original(swapChain, bufferCount, width, height, newFormat, swapChainFlags);
             }
         }

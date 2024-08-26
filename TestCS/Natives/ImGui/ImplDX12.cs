@@ -1,30 +1,33 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Text;
-//using System.Threading.Tasks;
-//using TestCS.Hooking.Hooks.GUI;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using TestCS.Hooking.Hooks.GUI;
 
-//namespace TestCS.Natives.ImGui
-//{
-//    internal class ImplDX12
-//    {
-//        [DllImport("cimgui", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, EntryPoint = "ImGui_ImplDX11_Init")]
-//        public static extern bool Init(IntPtr device, int num_frames_in_flight, DXGI_FORMAT rtv_format, D3D12_CPU_DESCRIPTOR_HANDLE font_srv_cpu_desc_handle, IntPtr font_srv_gpu_desc_handle);
+namespace TestCS.Natives.ImGui
+{
+    using System;
+    using System.Runtime.InteropServices;
 
-//        [DllImport("cimgui", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, EntryPoint = "ImGui_ImplDX11_Shutdown")]
-//        public static extern void Shutdown();
+    internal class DX12
+    {
+        [DllImport("imgui_dx12win32", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, EntryPoint = "ImplDX12_Init")]
+        public static extern bool ImGui_ImplDX12_Init(IntPtr device, int num_frames_in_flight, DXGI_FORMAT rtv_format, IntPtr cbv_srv_heap, IntPtr font_srv_cpu_desc_handle, IntPtr font_srv_gpu_desc_handle);
 
-//        [DllImport("cimgui", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, EntryPoint = "ImGui_ImplDX11_NewFrame")]
-//        public static extern void NewFrame();
+        [DllImport("imgui_dx12win32", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, EntryPoint = "ImplDX12_Shutdown")]
+        public static extern void ImGui_ImplDX12_Shutdown();
 
-//        [DllImport("cimgui", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, EntryPoint = "ImGui_ImplDX11_RenderDrawData")]
-//        public static extern void RenderDrawData(ImDrawDataPtr drawData);
+        [DllImport("imgui_dx12win32", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, EntryPoint = "ImplDX12_NewFrame")]
+        public static extern void ImGui_ImplDX12_NewFrame();
 
-//        [DllImport("cimgui", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, EntryPoint = "ImGui_ImplDX11_CreateDeviceObjects")]
-//        public static extern bool CreateDeviceObjects();
+        [DllImport("imgui_dx12win32", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, EntryPoint = "ImplDX12_RenderDrawData")]
+        public static extern void ImGui_ImplDX12_RenderDrawData(IntPtr draw_data, IntPtr graphics_command_list);
 
-//        [DllImport("cimgui", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, EntryPoint = "ImGui_ImplDX11_InvalidateDeviceObjects")]
-//        public static extern void InvalidateDeviceObjects();
-//    }
-//}
+        [DllImport("imgui_dx12win32", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, EntryPoint = "ImplDX12_CreateDeviceObjects")]
+        public static extern bool ImGui_ImplDX12_CreateDeviceObjects();
+
+        [DllImport("imgui_dx12win32", CallingConvention = CallingConvention.Cdecl, ExactSpelling = true, EntryPoint = "ImplDX12_InvalidateDeviceObjects")]
+        public static extern void ImGui_ImplDX12_InvalidateDeviceObjects();
+    }
+}

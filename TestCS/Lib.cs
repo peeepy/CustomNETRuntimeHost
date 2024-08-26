@@ -31,6 +31,8 @@ namespace TestCS
             Hooking.Hooking.Init();
             ScriptManager.Instance.Init();
             LOG.INFO("Script manager initialised.");
+
+           // TODO: Init ImGui
         }
     }
 }

@@ -37,3 +37,6 @@ global using static TestCS.Logger;
 global using System;
 global using System.Runtime.InteropServices;
 global using ImGuiNET;
+global using static TestCS.Globals;
+global using static TestCS.Natives.ImGui.DX12;
+global using static TestCS.Natives.ImGui.Win32;

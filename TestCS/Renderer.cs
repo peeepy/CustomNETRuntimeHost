@@ -8,6 +8,7 @@ using SharpDX.DXGI;
 using SharpDX.Direct3D12;
 using System.Collections;
 using SharpDX;
+using TestCS.Natives.ImGui;
 
 namespace TestCS
 {
@@ -24,9 +25,25 @@ namespace TestCS
     {
         private Renderer() { }
 
-        private static Renderer GetInstance()
+        public delegate void RendererCallback();
+        public delegate void WindowProcedureCallback(IntPtr hWnd, uint msg, IntPtr wParam, IntPtr lParam);
+
+        private bool _Resizing;
+        private static SortedDictionary<uint, RendererCallback> _RendererCallBacks = new SortedDictionary<uint, RendererCallback>();
+        private static List<WindowProcedureCallback> _WindowProcedureCallbacks = new List<WindowProcedureCallback>();
+
+        public static Renderer GetInstance()
         {
             return new Renderer();
+        }
+        
+        public static bool IsResizing()
+        {
+            return GetInstance()._Resizing;
+        }
+        public static void SetResizing(bool status)
+        {
+            GetInstance()._Resizing = status;
         }
 
         // DX12
@@ -356,16 +373,176 @@ namespace TestCS
         }
 
 
+
+        public bool AddRendererCallback(RendererCallback callback, uint priority)
+        {
+            if (_RendererCallBacks.ContainsKey(priority))
+            {
+                return false;
+            }
+            _RendererCallBacks.Add(priority, callback);
+            return true;
+        }
+
+        public void AddWindowProcedureCallback(WindowProcedureCallback callback)
+        {
+            _WindowProcedureCallbacks.Add(callback);
+        }
+
+
+
+        public static int WndProc(IntPtr hwnd, uint msg, IntPtr wparam, IntPtr lparam)
+        {
+            foreach (var callback in _WindowProcedureCallbacks)
+            {
+                callback(hwnd, msg, wparam, lparam);
+            }
+            return ImGui_ImplWin32_WndProcHandler(hwnd, msg, wparam, lparam);
+        }
+
         public static void DX12OnPresent()
         {
-            Renderer.GetInstance().DX12OnPresentImpl();
+            DX12NewFrame();
+            foreach (var callback in _RendererCallBacks.Values)
+            {
+                callback();
+            }
         }
 
-        private void DX12OnPresentImpl()
+
+
+        public static void DX12NewFrame()
         {
-            LOG.INFO("Hooked DX12 SwapChain Present");
-
+            DX12.ImGui_ImplDX12_NewFrame();
+            Win32.ImGui_ImplWin32_NewFrame();
+            ImGui.NewFrame();
         }
+
+        public void DX12EndFrame()
+        {
+            WaitForNextFrame();
+            var currentFrameContext = _FrameContext[_SwapChain.CurrentBackBufferIndex];
+            currentFrameContext.CommandAllocator.Reset();
+
+            // Create initial resource barrier (Present to RenderTarget)
+            var barrierToRenderTarget = new ResourceBarrier(new ResourceTransitionBarrier(currentFrameContext.Resource, ResourceStates.Present, ResourceStates.RenderTarget));
+
+            _CommandList.Reset(currentFrameContext.CommandAllocator, null);
+            _CommandList.ResourceBarrier(barrierToRenderTarget);
+            _CommandList.SetRenderTargets(1, currentFrameContext.Descriptor, null);
+            _CommandList.SetDescriptorHeaps(1, new[] { _DescriptorHeap });
+
+            // Render ImGui
+            ImGui.Render();
+            unsafe
+            {
+                ImDrawDataPtr drawDataPtr = ImGui.GetDrawData();
+                IntPtr nativePtr = (IntPtr)drawDataPtr.NativePtr;
+                DX12.ImGui_ImplDX12_RenderDrawData(nativePtr, _CommandList.NativePointer);
+            }
+
+            // Create new barrier for transitioning back to Present
+            var barrierToPresent = new ResourceBarrier(new ResourceTransitionBarrier(currentFrameContext.Resource, ResourceStates.RenderTarget, ResourceStates.Present));
+            _CommandList.ResourceBarrier(barrierToPresent);
+
+            _CommandList.Close();
+            _CommandQueue.ExecuteCommandList(_CommandList);
+
+            ulong fenceValue = _FenceLastSignaledValue + 1;
+            _CommandQueue.Signal(_Fence, (long)fenceValue);
+            _FenceLastSignaledValue = fenceValue;
+            currentFrameContext.FenceValue = fenceValue;
+
+            _SwapChain.Present(1, 0);
+        }
+
+        public void WaitForNextFrame()
+        {
+            ulong nextFrameIndex = _FrameIndex + 1;
+            _FrameIndex = nextFrameIndex;
+
+            IntPtr[] waitableObjects = new IntPtr[2];
+            waitableObjects[0] = _SwapchainWaitableObject;
+            int numWaitableObjects = 1;
+
+            FrameContext frameCtx = _FrameContext[(int)nextFrameIndex % _SwapChainDesc.BufferCount];
+            ulong fenceValue = frameCtx.FenceValue;
+
+            if (fenceValue != 0) // means a fence was signaled
+            {
+                frameCtx.FenceValue = 0;
+                _Fence.SetEventOnCompletion((long)fenceValue, _FenceEvent.SafeWaitHandle.DangerousGetHandle());
+                waitableObjects[1] = _FenceEvent.SafeWaitHandle.DangerousGetHandle();
+                numWaitableObjects = 2;
+            }
+
+            WaitHandle.WaitAll(Array.ConvertAll(waitableObjects.Take(numWaitableObjects).ToArray(), h => new AutoResetEvent(false) { Handle = h }));
+        }
+
+        public void WaitForLastFrame()
+        {
+            FrameContext frameCtx = _FrameContext[(int)(_FrameIndex % (ulong)_SwapChainDesc.BufferCount)];
+            ulong fenceValue = frameCtx.FenceValue;
+
+            if (fenceValue == 0)
+            {
+                return;
+            }
+
+            frameCtx.FenceValue = 0;
+
+            if (_Fence.CompletedValue >= (long)fenceValue)
+            {
+                return;
+            }
+
+            _Fence.SetEventOnCompletion((long)fenceValue, _FenceEvent.SafeWaitHandle.DangerousGetHandle());
+            _FenceEvent.WaitOne();
+        }
+
+
+
+        public void DX12PreResize()
+        {
+            SetResizing(true);
+            WaitForLastFrame();
+            DX12.ImGui_ImplDX12_InvalidateDeviceObjects();
+
+            for (int i = 0; i < _SwapChainDesc.BufferCount; i++)
+            {
+                if (_FrameContext[i].Resource != null)
+                {
+                    _FrameContext[i].Resource.Dispose();
+                    _FrameContext[i].Resource = null;
+                }
+            }
+        }
+
+        public void DX12PostResize()
+        {
+            // Recreate our pointers and ImGui's
+            DX12.ImGui_ImplDX12_CreateDeviceObjects();
+
+            int rtvDescriptorSize = _Device.GetDescriptorHandleIncrementSize(DescriptorHeapType.RenderTargetView);
+            CpuDescriptorHandle rtvHandle = _BackbufferDescriptorHeap.CPUDescriptorHandleForHeapStart;
+
+            for (int i = 0; i < _SwapChainDesc.BufferCount; i++)
+            {
+                SharpDX.Direct3D12.Resource backBuffer;
+                _FrameContext[i].Descriptor = rtvHandle;
+
+                using (backBuffer = _SwapChain.GetBackBuffer<SharpDX.Direct3D12.Resource>(i))
+                {
+                    _Device.CreateRenderTargetView(backBuffer, null, rtvHandle);
+                    _FrameContext[i].Resource = backBuffer;
+                    rtvHandle.Ptr += rtvDescriptorSize;
+                }
+            }
+
+            SetResizing(false);
+        }
+
+
 
         private bool InitImpl()
         {
