@@ -36,7 +36,7 @@ global using BOOL = System.Int32;  // Alias BOOL to int for P/Invoke
 global using static TestCS.Logger;
 global using System;
 global using System.Runtime.InteropServices;
-global using ImGuiNET;
+//global using ImGuiNET;
 global using static TestCS.Globals;
-global using static TestCS.Natives.ImGui.DX12;
-global using static TestCS.Natives.ImGui.Win32;
+global using DearImguiSharp;
+global using static TestCS.Hooking.Hooks.GUI.WindowHook;

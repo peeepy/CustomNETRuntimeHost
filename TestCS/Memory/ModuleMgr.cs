@@ -9,11 +9,23 @@ namespace TestCS.Memory
 {
     public class ModuleManager
     {
-        public static ModuleManager Instance { get; } = new ModuleManager();
+        private static ModuleManager _Instance;
 
         private ModuleManager() { }
 
-        public bool LoadModules()
+        private static ModuleManager GetInstance()
+        {
+            if (_Instance == null)
+            {
+                _Instance = new ModuleManager();
+            }
+            return _Instance;
+        }
+        public static bool LoadModules()
+        {
+            return GetInstance().LoadModulesImpl();
+        }
+        private bool LoadModulesImpl()
         {
             try
             {
@@ -34,7 +46,7 @@ namespace TestCS.Memory
 
         public static Module? Get(string name)
         {
-            return ModuleManager.Instance.GetImpl(name);
+            return GetInstance().GetImpl(name);
         }
 
     }

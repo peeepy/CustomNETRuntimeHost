@@ -9,8 +9,8 @@
     ".NETCoreApp,Version=v8.0/win-x64": {
       "TestCS/1.0.0": {
         "dependencies": {
+          "DearImguiSharp": "1.90.0",
           "EasyHook": "2.7.6789",
-          "ImGui.NET": "1.91.0.1",
           "SharpDX": "4.2.0",
           "SharpDX.DXGI": "4.2.0",
           "SharpDX.Direct3D12": "4.2.0",
@@ -742,29 +742,28 @@
           }
         }
       },
-      "EasyHook/2.7.6789": {
+      "DearImguiSharp/1.90.0": {
         "runtime": {
-          "lib/net40/EasyHook.dll": {
-            "assemblyVersion": "2.7.6789.0",
-            "fileVersion": "2.7.6789.0"
-          }
-        }
-      },
-      "ImGui.NET/1.91.0.1": {
-        "dependencies": {
-          "System.Buffers": "4.5.1",
-          "System.Numerics.Vectors": "4.5.0",
-          "System.Runtime.CompilerServices.Unsafe": "6.0.0"
-        },
-        "runtime": {
-          "lib/net8.0/ImGui.NET.dll": {
-            "assemblyVersion": "1.91.0.1",
-            "fileVersion": "1.91.0.1"
+          "lib/net5.0/CppSharp.Runtime.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          },
+          "lib/net5.0/DearImguiSharp.dll": {
+            "assemblyVersion": "1.90.0.0",
+            "fileVersion": "1.90.0.0"
           }
         },
         "native": {
           "runtimes/win-x64/native/cimgui.dll": {
             "fileVersion": "0.0.0.0"
+          }
+        }
+      },
+      "EasyHook/2.7.6789": {
+        "runtime": {
+          "lib/net40/EasyHook.dll": {
+            "assemblyVersion": "2.7.6789.0",
+            "fileVersion": "2.7.6789.0"
           }
         }
       },
@@ -1078,7 +1077,7 @@
       },
       "runtime.win.System.IO.FileSystem/4.3.0": {
         "dependencies": {
-          "System.Buffers": "4.5.1",
+          "System.Buffers": "4.3.0",
           "System.Collections": "4.3.0",
           "System.Diagnostics.Debug": "4.3.0",
           "System.IO": "4.3.0",
@@ -1258,7 +1257,21 @@
           }
         }
       },
-      "System.Buffers/4.5.1": {},
+      "System.Buffers/4.3.0": {
+        "dependencies": {
+          "System.Diagnostics.Debug": "4.3.0",
+          "System.Diagnostics.Tracing": "4.3.0",
+          "System.Resources.ResourceManager": "4.3.0",
+          "System.Runtime": "4.3.0",
+          "System.Threading": "4.3.0"
+        },
+        "runtime": {
+          "lib/netstandard1.1/System.Buffers.dll": {
+            "assemblyVersion": "4.0.1.0",
+            "fileVersion": "4.6.24705.1"
+          }
+        }
+      },
       "System.Collections/4.3.0": {
         "dependencies": {
           "Microsoft.NETCore.Platforms": "1.1.0",
@@ -1382,7 +1395,7 @@
       "System.IO.Compression/4.3.0": {
         "dependencies": {
           "Microsoft.NETCore.Platforms": "1.1.0",
-          "System.Buffers": "4.5.1",
+          "System.Buffers": "4.3.0",
           "System.Collections": "4.3.0",
           "System.Diagnostics.Debug": "4.3.0",
           "System.IO": "4.3.0",
@@ -1406,7 +1419,7 @@
       },
       "System.IO.Compression.ZipFile/4.3.0": {
         "dependencies": {
-          "System.Buffers": "4.5.1",
+          "System.Buffers": "4.3.0",
           "System.IO": "4.3.0",
           "System.IO.Compression": "4.3.0",
           "System.IO.FileSystem": "4.3.0",
@@ -2135,19 +2148,19 @@
       "serviceable": false,
       "sha512": ""
     },
+    "DearImguiSharp/1.90.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-8nF8uUeuq8N8nHqG9SmW2uabRvx//nMmty022X5dQTpGuwiG+YSdwzinLYzeraraFBP+lCK3/pgX9ju2/1Diug==",
+      "path": "dearimguisharp/1.90.0",
+      "hashPath": "dearimguisharp.1.90.0.nupkg.sha512"
+    },
     "EasyHook/2.7.6789": {
       "type": "package",
       "serviceable": true,
       "sha512": "sha512-nyNReeHCLo0GUB7f3ZMCwf2dccr/u5e4fsoaga7M93R1s96DWSS2zYwxfBOBY5/3edBZ6LWcVX9Jp7/zKVwZqw==",
       "path": "easyhook/2.7.6789",
       "hashPath": "easyhook.2.7.6789.nupkg.sha512"
-    },
-    "ImGui.NET/1.91.0.1": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-Q7IoWTeAJ3jywfvgbFdhKCtcSeRt90ghrZiZlnHPOlcojrPcx9UbqaM3rXWsDg6vv1JKqz1BhNIK2RIwRV4Pxw==",
-      "path": "imgui.net/1.91.0.1",
-      "hashPath": "imgui.net.1.91.0.1.nupkg.sha512"
     },
     "Microsoft.CSharp/4.7.0": {
       "type": "package",
@@ -2534,12 +2547,12 @@
       "path": "system.appcontext/4.3.0",
       "hashPath": "system.appcontext.4.3.0.nupkg.sha512"
     },
-    "System.Buffers/4.5.1": {
+    "System.Buffers/4.3.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-Rw7ijyl1qqRS0YQD/WycNst8hUUMgrMH4FCn1nNm27M4VxchZ1js3fVjQaANHO5f3sN4isvP4a+Met9Y4YomAg==",
-      "path": "system.buffers/4.5.1",
-      "hashPath": "system.buffers.4.5.1.nupkg.sha512"
+      "sha512": "sha512-ratu44uTIHgeBeI0dE8DWvmXVBSo4u7ozRZZHOMmK/JPpYyo0dAfgSiHlpiObMQ5lEtEyIXA40sKRYg5J6A8uQ==",
+      "path": "system.buffers/4.3.0",
+      "hashPath": "system.buffers.4.3.0.nupkg.sha512"
     },
     "System.Collections/4.3.0": {
       "type": "package",
