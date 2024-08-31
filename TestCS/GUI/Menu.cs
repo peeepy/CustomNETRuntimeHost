@@ -54,7 +54,7 @@ namespace TestCS.GUI
                 //        g_IsRunning = false;
                 //    }
                 //}
-                UIManager.Draw();
+                //UIManager.Draw();
                 ImGui.End();
             }
             ImGui.PopStyleColor(1);
