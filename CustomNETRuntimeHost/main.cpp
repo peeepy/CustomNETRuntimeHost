@@ -87,7 +87,7 @@ bool load_and_run()
 
     // Get the path to the .NET Core runtime configuration file
     const wchar_t* config_path = SOLUTION_DIR L"output2\\TestCS.runtimeconfig.json";
-
+    
     // Load and initialize .NET Core
     void* load_assembly_and_get_function_pointer = nullptr;
     hostfxr_handle cxt = nullptr;

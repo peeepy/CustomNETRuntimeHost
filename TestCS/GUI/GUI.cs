@@ -13,7 +13,13 @@ namespace TestCS.GUI
     public class GUIMgr
     {
         private static GUIMgr _Instance;
-        private bool _IsOpen = false;
+        private static bool _isOpen = false;
+
+        public static bool IsOpen() => _isOpen;
+
+        public static void SetOpen(bool value) => _isOpen = value;
+
+        public static void Toggle() => _isOpen = !_isOpen;
         //private static POINT CursorCoords;
 
         private GUIMgr()
@@ -43,16 +49,16 @@ namespace TestCS.GUI
             return GetInstance();
         }
 
-        public static bool IsOpen()
-        {
-            return GetInstance()._IsOpen;
-        }
+        //public static bool IsOpen()
+        //{
+        //    return GetInstance()._IsOpen;
+        //}
 
-        public static void Toggle()
-        {
-            GetInstance()._IsOpen ^= true;
-            LOG.INFO("Toggled GUI");
-        }
+        //public static void Toggle()
+        //{
+        //    GetInstance()._IsOpen = !GetInstance()._IsOpen;
+        //    LOG.INFO("Toggled GUI");
+        //}
 
         public static bool IsUsingKeyboard()
         {

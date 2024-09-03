@@ -47,18 +47,18 @@ namespace TestCS.Hooking
                 {
                     LOG.ERROR($"Error adding SwapChain Present hook: {ex}");
                 }
-                //try
-                //{
-                //    BaseHook.Add(SwapChainHook.ResizeBuffers, new DetourHook<SwapChainHook.ResizeBuffersDelegate>("ResizeBuffers", GetVF(PointerData.SwapChain, SwapChainHook.VMTResizeBuffersIdx), SwapChainHook.ResizeBuffers));
-                //    LOG.INFO("Added SwapChain ResizeBuffers hook");
-                //}
-                //catch (Exception ex)
-                //{
-                //    LOG.ERROR($"Error adding SwapChain Resize Buffers hook: {ex}");
-                //}
-                //}
+                try
+                {
+                    BaseHook.Add(SwapChainHook.ResizeBuffers, new DetourHook<SwapChainHook.ResizeBuffersDelegate>("ResizeBuffers", GetVF(PointerData.SwapChain, SwapChainHook.VMTResizeBuffersIdx), SwapChainHook.ResizeBuffers));
+                    LOG.INFO("Added SwapChain ResizeBuffers hook");
+                }
+                catch (Exception ex)
+                {
+                    LOG.ERROR($"Error adding SwapChain Resize Buffers hook: {ex}");
+                }
             }
         }
+        
 
         public static void Destroy()
         {

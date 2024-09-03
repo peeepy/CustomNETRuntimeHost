@@ -25,8 +25,9 @@ namespace TestCS.GUI
         public static void Draw()
         {
             if (!GUIMgr.IsOpen()) { return; }
-
-            //ImGui.PushFont(g_DefaultFont);
+            //bool dummy = true;
+            //ImGui.ShowDemoWindow(ref dummy);
+            ////ImGui.PushFont(g_DefaultFont);
             ImGui.PushStyleColorVec4((int)ImGuiCol.WindowBg, new ImVec4 { X = 15.0f, W = 15.0f, Y = 15.0f, Z = 0.0f });
 
             ImGui.SetNextWindowSize(new ImVec2
@@ -54,11 +55,11 @@ namespace TestCS.GUI
                 //        g_IsRunning = false;
                 //    }
                 //}
-                //UIManager.Draw();
+                UIManager.Draw();
                 ImGui.End();
             }
             ImGui.PopStyleColor(1);
-            //ImGui.PopFont();
+            ////ImGui.PopFont();
         }
 
 

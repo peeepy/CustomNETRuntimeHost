@@ -38,7 +38,7 @@ namespace TestCS.Hooking.Hooks.GUI
         {
             try
             {
-                LOG.INFO("Present hook called");
+                //LOG.INFO("Present hook called");
                 if (g_IsRunning && !Renderer.IsResizing())
                 {
                     Renderer.DX12OnPresent();
