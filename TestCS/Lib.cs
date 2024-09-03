@@ -6,6 +6,7 @@ using System.Text;
 using TestCS.Memory;
 using static TestCS.Memory.PointerData;
 using TestCS.Hooking;
+using TestCS.GUI;
 
 namespace TestCS
 {
@@ -17,15 +18,47 @@ namespace TestCS
         public static void Main()
         {
             Logger.Init("TestCS", "D:\\Coding\\csharp\\output2\\init.log");
-            LOG.INFO($"Current time is: {DateTime.Now}");
-            ModuleManager.Instance.LoadModules();
-            LOG.INFO("Loaded modules.");
-            LOG.INFO("Scanning for pointers...");
-            Pointers.Init();
-            Renderer.Init();
+            if (!ModuleManager.LoadModules())
+            {
+                Unload();
+            }
+            if (!Pointers.Init())
+            {
+                Unload();
+            }
+            if (!Renderer.Init()) {
+                Unload();
+            }
+
+            GUIMgr.Init();
+
             Hooking.Hooking.Init();
-            ScriptManager.Instance.Init();
+
+            ScriptManager.Init();
+
             LOG.INFO("Script manager initialised.");
+
+            FiberPool.Init(5);
+            LOG.INFO("Fiber pool initialised.");
+           
+
+            //try
+            //{
+            //    Notifications.Show("TestCS", "Loaded succesfully", NotificationType.Success);
+            //}
+            //catch (Exception ex)
+            //{
+            //    LOG.ERROR($"Failed to show notification: {ex}");
+            //}
+            // add try/catch for fiberpool push notification
+            
+        }
+        private static void Unload()
+        {
+            Hooking.Hooking.Destroy();
+            LOG.INFO("Hooking uninitialised");
+            Renderer.Destroy();
+            LOG.INFO("Renderer uninitialised");
         }
     }
 }

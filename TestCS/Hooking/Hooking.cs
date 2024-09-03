@@ -7,30 +7,67 @@ using SharpDX;
 using SharpDX.DXGI;
 using TestCS.Hooking.Hooks.GUI;
 using TestCS.Memory;
+using EasyHook;
 
 namespace TestCS.Hooking
 {
     public static class Hooking
     {
-        private static void AddHooks() 
+        private static void AddHooks()
         {
-            BaseHook.Add(WindowHook.WndProc, new DetourHook<WindowHook.WndProcDelegate>("WndProc", PointerData.WndProc, WindowHook.WndProc));
-
-            // TODO: Finish renderer...
-            if (!PointerData.IsVulkan)
+            try
             {
-                BaseHook.Add(SwapChainHook.Present, new DetourHook<SwapChainHook.PresentDelegate>("SwapChain::Present", GetVF(PointerData.SwapChain, SwapChainHook.VMTPresentIdx), SwapChainHook.Present));
-                BaseHook.Add(SwapChainHook.ResizeBuffers, new DetourHook<SwapChainHook.ResizeBuffersDelegate>("SwapChain::ResizeBuffers", GetVF(PointerData.SwapChain, SwapChainHook.VMTResizeBuffersIdx), SwapChainHook.ResizeBuffers));
+                BaseHook.Add(WindowHook.WndProc, new DetourHook<WindowHook.WndProcDelegate>("WndProc", PointerData.WndProc, WindowHook.WndProc));
+                LOG.INFO("Added WndProc hook");
+            }
+            catch (Exception ex)
+            {
+                LOG.ERROR($"Error adding WndProc hook: {ex}");
             }
 
+            //try
+            //{
+            //    IntPtr setCursorPosFuncPtr = WindowHook.GetSetCursorPosAddress();
+            //    BaseHook.Add(WindowHook.SetCursorPos, new DetourHook<WindowHook.SetCursorPosDelegate>("SetCursorPos", setCursorPosFuncPtr, WindowHook.SetCursorPos));
+            //    LOG.INFO("Added SetCursorPos hook");
+            //}
+            //catch (Exception ex)
+            //{
+            //    LOG.ERROR($"Error adding WndProc hook: {ex}");
+            //}
 
-            
-
-            //SwapChainHook.PresentHook = new DetourHook<SwapChainHook.PresentDelegate>("SwapChain::Present", GetVF(PointerData.SwapChain, SwapChainHook.VMTPresentIdx), SwapChainHook.Present);
-            //SwapChainHook.ResizeBuffersHook = new DetourHook<SwapChainHook.ResizeBuffersDelegate>("SwapChain::ResizeBuffers", GetVF(PointerData.SwapChain, SwapChainHook.VMTResizeBuffersIdx), SwapChainHook.ResizeBuffers);
+            if (!PointerData.IsVulkan)
+            {
+                try
+                {
+                    BaseHook.Add(SwapChainHook.Present, new DetourHook<SwapChainHook.PresentDelegate>("Swapchain::Present", GetVF(PointerData.SwapChain, SwapChainHook.VMTPresentIdx), SwapChainHook.Present));
+                    //LOG.INFO("Added SwapChain Present hook");
+                }
+                catch (Exception ex)
+                {
+                    LOG.ERROR($"Error adding SwapChain Present hook: {ex}");
+                }
+                try
+                {
+                    BaseHook.Add(SwapChainHook.ResizeBuffers, new DetourHook<SwapChainHook.ResizeBuffersDelegate>("ResizeBuffers", GetVF(PointerData.SwapChain, SwapChainHook.VMTResizeBuffersIdx), SwapChainHook.ResizeBuffers));
+                    LOG.INFO("Added SwapChain ResizeBuffers hook");
+                }
+                catch (Exception ex)
+                {
+                    LOG.ERROR($"Error adding SwapChain Resize Buffers hook: {ex}");
+                }
+            }
         }
+        
 
-
+        public static void Destroy()
+        {
+            BaseHook.DisableAll();
+            //for (var hook = BaseHook.Hooks)
+            //{
+            //    BaseHook.Hooks.Remove
+            //}
+        }
         public static bool Init()
         {
            AddHooks();
@@ -41,9 +78,19 @@ namespace TestCS.Hooking
 
         public static IntPtr GetVF(IntPtr ptr, int index)
         {
-            IntPtr vtable = Marshal.ReadIntPtr(ptr); // Dereference once to get IDXGISwapChain1*
-            IntPtr vfTable = Marshal.ReadIntPtr(vtable); // Read the vtable pointer
-            return Marshal.ReadIntPtr(vfTable + index * IntPtr.Size); // Get the function pointer at the specified index
+            try
+            {
+                IntPtr swapChain = Marshal.ReadIntPtr(ptr);
+                IntPtr vfTable = Marshal.ReadIntPtr(swapChain);
+                IntPtr functionPtr = Marshal.ReadIntPtr(vfTable + index * IntPtr.Size);
+
+                return functionPtr;
+            }
+            catch (Exception ex)
+            {
+                LOG.ERROR($"Error reading vtable pointer: {ex}");
+                return IntPtr.Zero;
+            }
         }
     }
 }

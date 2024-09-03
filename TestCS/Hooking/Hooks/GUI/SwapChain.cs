@@ -1,5 +1,6 @@
 ﻿using SharpDX;
 using SharpDX.DXGI;
+using Silk.NET.Core.Native;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,30 +11,56 @@ namespace TestCS.Hooking.Hooks.GUI
 {
     public class SwapChainHook
     {
+        /* C++ SwapChain hook:
+        HRESULT SwapChain::Present(IDXGISwapChain1* that, UINT syncInterval, UINT flags)
+        {
+            if (g_Running && !Renderer::IsResizing())
+            {
+                Renderer::DX12OnPresent();
+            }
+
+            return BaseHook::Get < SwapChain::Present, DetourHook < decltype(&Present) >> ()->Original()(that, syncInterval, flags);
+        }
+        */
             public const int VMTPresentIdx = 8;
             public const int VMTResizeBuffersIdx = 13;
 
             [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-            public delegate Result PresentDelegate(IntPtr swapChain, uint syncInterval, uint flags);
+            public delegate int PresentDelegate(IntPtr swapChain, uint syncInterval, uint flags);
 
             [UnmanagedFunctionPointer(CallingConvention.StdCall)]
-            public delegate Result ResizeBuffersDelegate(IntPtr swapChain, uint bufferCount, uint width, uint height, DXGI_FORMAT newFormat, uint swapChainFlags);
+            public delegate int ResizeBuffersDelegate(IntPtr swapChain, uint bufferCount, uint width, uint height, DXGI_FORMAT newFormat, uint swapChainFlags);
 
             public static DetourHook<PresentDelegate> PresentHook { get; }
             public static DetourHook<ResizeBuffersDelegate> ResizeBuffersHook { get; }
 
-            public static Result Present(IntPtr swapChain, uint syncInterval, uint flags)
+        public static int Present(IntPtr swapChain, uint syncInterval, uint flags)
+        {
+            try
             {
-            // TODO: Implement these variables and method in Renderer. g_IsRunning is global
-            //Renderer.DX12OnPresent();
-            LOG.INFO("Hooked DX12 SwapChain Present");
-
-            return BaseHook.Get<DetourHook<PresentDelegate>>(Present).Original(swapChain, syncInterval, flags);
+                //LOG.INFO("Present hook called");
+                if (g_IsRunning && !Renderer.IsResizing())
+                {
+                    Renderer.DX12OnPresent();
+                }
+            }
+            catch (Exception ex)
+            {
+                LOG.ERROR($"Exception in Present hook: {ex.Message}");
             }
 
-            public static Result ResizeBuffers(IntPtr swapChain, uint bufferCount, uint width, uint height, DXGI_FORMAT newFormat, uint swapChainFlags)
+            return BaseHook.Get<DetourHook<PresentDelegate>>(Present).Original(swapChain, syncInterval, flags);
+        }
+
+        public static int ResizeBuffers(IntPtr swapChain, uint bufferCount, uint width, uint height, DXGI_FORMAT newFormat, uint swapChainFlags)
             {
-            LOG.INFO("ResizeBuffers Swapchain Hooked");
+                if (g_IsRunning)
+            {
+                Renderer.DX12PreResize();
+                var result = BaseHook.Get<DetourHook<ResizeBuffersDelegate>>(ResizeBuffers).Original(swapChain, bufferCount, width, height, newFormat, swapChainFlags);
+                Renderer.DX12PostResize();
+                return result;
+            }
                 return BaseHook.Get<DetourHook<ResizeBuffersDelegate>>(ResizeBuffers).Original(swapChain, bufferCount, width, height, newFormat, swapChainFlags);
             }
         }
