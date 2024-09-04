@@ -5,15 +5,18 @@ using System.Text;
 using System.Threading.Tasks;
 using SharpDX;
 using SharpDX.DXGI;
-using TestCS.Hooking.Hooks.GUI;
 using TestCS.Memory;
 using EasyHook;
+using TestCS.Hooking.Hooks.Anticheat;
+using TestCS.Hooking.Hooks.Script;
+using TestCS.Hooking.Hooks.GUI;
+using TestCS.Hooking.Hooks.Protections;
 
 namespace TestCS.Hooking
 {
     public static class Hooking
     {
-        private static void AddHooks()
+        private unsafe static void AddHooks()
         {
             try
             {
@@ -56,6 +59,18 @@ namespace TestCS.Hooking
                 {
                     LOG.ERROR($"Error adding SwapChain Resize Buffers hook: {ex}");
                 }
+
+                //Anticheat
+                BaseHook.Add(QueueDependencyHook.QueueDependency, new DetourHook<QueueDependencyHook.QueueDependencyDelegate>("QueueDependency", PointerData.QueueDependency, QueueDependencyHook.QueueDependency));
+                BaseHook.Add(SendMetricHook.SendMetric, new DetourHook<SendMetricHook.SendMetricDelegate>("SendMetric", PointerData.SendMetric, SendMetricHook.SendMetric));
+                BaseHook.Add(UnkFunctionHook.UnkFunction, new DetourHook<UnkFunctionHook.UnkFunctionDelegate>("UnkFunction", PointerData.UnkFunction, UnkFunctionHook.UnkFunction));
+
+                // Protections - TODO: Add the classes for this method
+                BaseHook.Add(Protections.HandleNetGameEvent, new DetourHook<Protections.HandleNetGameEventDelegate>("HandleNetGameEvent", PointerData.HandleNetGameEvent, Protections.HandleNetGameEvent));
+
+                //Script
+                BaseHook.Add(ScriptThreads.RunScriptThreads, new DetourHook<ScriptThreads.ScriptThreadDelegate>("RunScriptThreads", PointerData.RunScriptThreads, ScriptThreads.RunScriptThreads));
+
             }
         }
         

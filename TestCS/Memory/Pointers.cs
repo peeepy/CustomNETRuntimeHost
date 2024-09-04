@@ -21,58 +21,31 @@ namespace TestCS.Memory
 
     public static class Functions
 {
-    // Equivalent to: using GetNativeHandler = rage::scrNativeHandler (*)(rage::scrNativeHash hash);
-    //public delegate IntPtr GetNativeHandler(uint hash);
-    //public delegate Utils.RenderingInfo GetRendererInfo(); // returns RenderingInfo instance
-    //public delegate void FixVectors(IntPtr call_ctx); // rage::scrNativeCallContext* call_Ctx
-    //public delegate IntPtr HandleToPtr(int handle); //returns void*
-    //public delegate void SendEventAck(IntPtr eventMgr, IntPtr evnt, IntPtr sourcePlayer, IntPtr targetPlayer, int eventIndex, int handledBitset); // rage::netEventMgr* eventMgr, void* event, CNetGamePlayer* sourcePlayer, CNetGamePlayer* targetPlayer, int eventIndex, int handledBitset
-    //public delegate int PtrToHandle(IntPtr pointer); // void*
-    //public delegate IntPtr GetLocalPed(); // returns CPed*
-    //public delegate IntPtr GetSyncTreeForType(IntPtr netObjectMgr, UInt16 type); // returns rage::netSyncTree*, param void* netObjectMgr
-    //public delegate IntPtr GetNetworkPlayerFromPid(byte player); // returns CNetGamePlayer*, param uint8_t player
-    //public delegate bool WorldToScreen(IntPtr world_coords, out float out_x, out float out_y); // returns bool, params float* world_coords, float* out_x, float* out_y
-    //public delegate IntPtr GetNetObjectById(ushort id); // returns rage::netObject*, param uint16_t id
-    //public delegate bool RequestControlOfNetObject(ref IntPtr netId, bool unk); // returns bool, params rage::netObject** netId, bool unk
-    //public delegate bool SendPacket(IntPtr mgr, IntPtr adde, int connection_id, IntPtr data, int size, int flags); // returns bool, params rage::netConnectionManager* mgr, rage::netPeerAddress* adde, void* data
-    //public delegate bool QueuePacket(IntPtr mgr, int msg_id, int connection_id, IntPtr data, int size, int flags, IntPtr unk); // returns bool, params rage::netConnectionManager* mgr, void* data, void* unk
-    //public delegate bool PostPresenceMessage(int localGamerIndex, IntPtr recipients, int numRecipients, string msg, uint ttlSeconds); // returns bool, params rage::rlGamerInfo* recipients, const char* msg
-    //public delegate bool SendNetInfoToLobby(IntPtr player, long a2, long a3, IntPtr a4); // returns bool, params rage::rlGamerInfo* player, DWORD* a4
-    //public delegate bool ReadBitBufferArray(IntPtr buffer, IntPtr read, int bits, int unk); // returns bool, params rage::datBitBuffer* buffer, PVOID read
-    //public delegate bool WriteBitBufferArray(IntPtr buffer, IntPtr val, int bits, int unk); // returns bool, params rage::datBitBuffer* buffer, void* val
-    //public delegate bool ReadBitBufferString(IntPtr buffer, StringBuilder read, int bits); // returns bool, params rage::datBitBuffer* buffer, char* read
-    //public delegate IntPtr GetAnimSceneFromHandle(IntPtr scene, int handle); // returns CAnimScene**, params CAnimScene** scene
-    //public delegate IntPtr InventoryEventConstructor(IntPtr existingItem, uint reward_hash, uint model_hash, bool a4, bool a5, IntPtr a6); // returns CEventInventoryItemPickedUp*, params CEventInventoryItemPickedUp*
-    //public delegate void TriggerWeaponDamageEvent(IntPtr source, IntPtr target, IntPtr unk, IntPtr position, IntPtr a5, IntPtr a6, bool override_dmg, IntPtr weapon_hash, float damage, float f10, int tire_index, int suspension_index, ulong flags, IntPtr action_result, bool hit_entity_weapon, bool hit_ammo_attachment, bool silenced, bool a18, bool a19, int a20, int a21, int a22, int a23, int a24, int a25); // returns void, params rage::netObject* source, rage::netObject* target, rage::netObject* unk, rage::fvector3* position, std::uint32_t* weapon_hash, void* action_result
-    //public delegate void TriggerGiveControlEvent(IntPtr player, IntPtr obj, int type); // returns void, params CNetGamePlayer* player, rage::netObject* object
-    //public delegate eThreadState ScriptVM(IntPtr stack, IntPtr globals, [MarshalAs(UnmanagedType.Bool)] bool globals_enabled, IntPtr program, IntPtr ctx);
-    //public delegate uint FwScriptGuidCreateGuid(IntPtr arg); // uint32_t (*)(void*)public static class Functions
-
     public delegate IntPtr GetNativeHandler(uint hash);
-        public delegate IntPtr GetRendererInfo();
-        public delegate void FixVectors(IntPtr call_ctx);
-        public delegate IntPtr HandleToPtr(int handle);
-        public delegate void SendEventAck(IntPtr eventMgr, IntPtr evnt, IntPtr sourcePlayer, IntPtr targetPlayer, int eventIndex, int handledBitset);
-        public delegate int PtrToHandle(IntPtr pointer);
-        public delegate IntPtr GetLocalPed();
-        public delegate IntPtr GetSyncTreeForType(IntPtr netObjectMgr, ushort type);
-        public delegate IntPtr GetNetworkPlayerFromPid(byte player);
-        public delegate bool WorldToScreen(IntPtr world_coords, out float out_x, out float out_y);
-        public delegate IntPtr GetNetObjectById(ushort id);
-        public delegate bool RequestControlOfNetObject(ref IntPtr netId, bool unk);
-        public delegate bool SendPacket(IntPtr mgr, IntPtr adde, int connection_id, IntPtr data, int size, int flags);
-        public delegate bool QueuePacket(IntPtr mgr, int msg_id, int connection_id, IntPtr data, int size, int flags, IntPtr unk);
-        public delegate bool PostPresenceMessage(int localGamerIndex, IntPtr recipients, int numRecipients, string msg, uint ttlSeconds);
-        public delegate bool SendNetInfoToLobby(IntPtr player, long a2, long a3, IntPtr a4);
-        public delegate bool ReadBitBufferArray(IntPtr buffer, IntPtr read, int bits, int unk);
-        public delegate bool WriteBitBufferArray(IntPtr buffer, IntPtr val, int bits, int unk);
-        public delegate bool ReadBitBufferString(IntPtr buffer, StringBuilder read, int bits);
-        public delegate IntPtr GetAnimSceneFromHandle(IntPtr scene, int handle);
-        public delegate IntPtr InventoryEventConstructor(IntPtr existingItem, uint reward_hash, uint model_hash, bool a4, bool a5, IntPtr a6);
-        public delegate void TriggerWeaponDamageEvent(IntPtr source, IntPtr target, IntPtr unk, IntPtr position, IntPtr a5, IntPtr a6, bool override_dmg, IntPtr weapon_hash, float damage, float f10, int tire_index, int suspension_index, ulong flags, IntPtr action_result, bool hit_entity_weapon, bool hit_ammo_attachment, bool silenced, bool a18, bool a19, int a20, int a21, int a22, int a23, int a24, int a25);
-        public delegate void TriggerGiveControlEvent(IntPtr player, IntPtr obj, int type);
-        public delegate uint ScriptVM(IntPtr stack, IntPtr globals, [MarshalAs(UnmanagedType.Bool)] bool globals_enabled, IntPtr program, IntPtr ctx);
-        public delegate uint FwScriptGuidCreateGuid(IntPtr arg);
+    public delegate IntPtr GetRendererInfo();
+    public delegate void FixVectors(IntPtr call_ctx);
+    public delegate IntPtr HandleToPtr(int handle);
+    public delegate void SendEventAck(IntPtr eventMgr, IntPtr evnt, IntPtr sourcePlayer, IntPtr targetPlayer, int eventIndex, int handledBitset);
+    public delegate int PtrToHandle(IntPtr pointer);
+    public delegate IntPtr GetLocalPed();
+    public delegate IntPtr GetSyncTreeForType(IntPtr netObjectMgr, ushort type);
+    public delegate IntPtr GetNetworkPlayerFromPid(byte player);
+    public delegate bool WorldToScreen(IntPtr world_coords, out float out_x, out float out_y);
+    public delegate IntPtr GetNetObjectById(ushort id);
+    public delegate bool RequestControlOfNetObject(ref IntPtr netId, bool unk);
+    public delegate bool SendPacket(IntPtr mgr, IntPtr adde, int connection_id, IntPtr data, int size, int flags);
+    public delegate bool QueuePacket(IntPtr mgr, int msg_id, int connection_id, IntPtr data, int size, int flags, IntPtr unk);
+    public delegate bool PostPresenceMessage(int localGamerIndex, IntPtr recipients, int numRecipients, string msg, uint ttlSeconds);
+    public delegate bool SendNetInfoToLobby(IntPtr player, long a2, long a3, IntPtr a4);
+    public delegate bool ReadBitBufferArray(IntPtr buffer, IntPtr read, int bits, int unk);
+    public delegate bool WriteBitBufferArray(IntPtr buffer, IntPtr val, int bits, int unk);
+    public delegate bool ReadBitBufferString(IntPtr buffer, StringBuilder read, int bits);
+    public delegate IntPtr GetAnimSceneFromHandle(IntPtr scene, int handle);
+    public delegate IntPtr InventoryEventConstructor(IntPtr existingItem, uint reward_hash, uint model_hash, bool a4, bool a5, IntPtr a6);
+    public delegate void TriggerWeaponDamageEvent(IntPtr source, IntPtr target, IntPtr unk, IntPtr position, IntPtr a5, IntPtr a6, bool override_dmg, IntPtr weapon_hash, float damage, float f10, int tire_index, int suspension_index, ulong flags, IntPtr action_result, bool hit_entity_weapon, bool hit_ammo_attachment, bool silenced, bool a18, bool a19, int a20, int a21, int a22, int a23, int a24, int a25);
+    public delegate void TriggerGiveControlEvent(IntPtr player, IntPtr obj, int type);
+    public delegate uint ScriptVM(IntPtr stack, IntPtr globals, [MarshalAs(UnmanagedType.Bool)] bool globals_enabled, IntPtr program, IntPtr ctx);
+    public delegate uint FwScriptGuidCreateGuid(IntPtr arg);
  }
 
 public static class PointerData
@@ -156,14 +129,6 @@ public static class PointerData
     public static InventoryEventConstructor InventoryEventConstructor { get; set; } // CEventInventoryItemPickedUp* (*)(CEventInventoryItemPickedUp*, std::uint32_t reward_hash, std::uint32_t model_hash, bool a4, bool a5, void* a6)
     public static IntPtr EventGroupNetwork { get; set; } // CEventGroup**
     public static TriggerGiveControlEvent TriggerGiveControlEvent { get; set; } // void (*)(CNetGamePlayer* player, rage::netObject* object, int type)
-
-    // Vulkan
-    public static IntPtr QueuePresentKHR { get; set; } // PVOID - Init in Renderer
-    public static IntPtr CreateSwapchainKHR { get; set; } // PVOID - Init in Renderer
-    public static IntPtr AcquireNextImageKHR { get; set; } // PVOID - Init in Renderer
-    public static IntPtr AcquireNextImage2KHR { get; set; } // PVOID - Init in Renderer
-
-    public static IntPtr VkDevicePtr { get; set; } // VkDevice*
 
     // DX12
     public static IntPtr SwapChain { get; set; } // IDXGISwapChain1**
